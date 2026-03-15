@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinAI — Personal Finance OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f8f9fa;color:#111;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid #e5e7eb}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;background:#1D9E75;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;flex-shrink:0;letter-spacing:-0.5px}
+.hdr h1{font-size:17px;font-weight:600;color:#111}
+.hdr p{font-size:12px;color:#6b7280;margin-top:2px}
+.auth-bar{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.user-pill{display:flex;align-items:center;gap:8px;padding:5px 12px;background:#f3f4f6;border-radius:20px;font-size:12px;color:#374151}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:white;flex-shrink:0}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#9ca3af;flex-shrink:0;transition:background 0.3s}
+.sync-dot.synced{background:#1D9E75}
+.sync-dot.syncing{background:#f59e0b;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.login-screen{text-align:center;padding:5rem 1rem;background:white;border-radius:16px;border:1px solid #e5e7eb;margin-top:2rem}
+.login-screen h2{font-size:24px;font-weight:700;margin-bottom:8px;color:#111}
+.login-screen p{font-size:14px;color:#6b7280;margin-bottom:2rem;line-height:1.7;max-width:360px;margin-left:auto;margin-right:auto}
+.google-btn{display:inline-flex;align-items:center;gap:10px;padding:11px 24px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;cursor:pointer;background:white;color:#374151;transition:all 0.15s;font-weight:500}
+.google-btn:hover{background:#f9fafb;border-color:#9ca3af}
+.offline-btn{font-size:13px;color:#9ca3af;background:transparent;border:none;cursor:pointer;margin-top:14px;display:block;margin-left:auto;margin-right:auto}
+.offline-btn:hover{color:#6b7280;text-decoration:underline}
+.config-banner{background:#fffbeb;border:1px solid #f59e0b;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;margin-bottom:1rem;line-height:1.6}
+.config-banner strong{color:#78350f}
+.config-banner code{background:#fef3c7;padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px}
+.tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid #e5e7eb;overflow-x:auto}
+.tab{padding:9px 14px;font-size:13px;cursor:pointer;border:none;background:transparent;color:#6b7280;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.15s;font-weight:500}
+.tab.active{color:#1D9E75;border-bottom-color:#1D9E75}
+.tab:hover:not(.active){color:#374151}
+.sec{display:none}.sec.active{display:block}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1rem}
+.met{background:white;border:1px solid #e5e7eb;border-radius:10px;padding:14px}
+.met .lbl{font-size:11px;color:#9ca3af;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
+.met .val{font-size:20px;font-weight:700;color:#111}
+.met .sub{font-size:11px;color:#9ca3af;margin-top:3px}
+.gv .val{color:#1D9E75}.rv .val{color:#ef4444}.av .val{color:#f59e0b}.bv .val{color:#3b82f6}.pv .val{color:#8b5cf6}
+.card{background:white;border:1px solid #e5e7eb;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.ct{font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem}
+input,select,textarea{height:38px;padding:0 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;background:white;color:#111;width:100%;outline:none;transition:border 0.15s}
+input:focus,select:focus,textarea:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,117,0.1)}
+textarea{height:auto;padding:10px 12px;resize:none}
+.btn{height:38px;padding:0 16px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;cursor:pointer;background:white;color:#374151;transition:all 0.15s;white-space:nowrap;font-weight:500}
+.btn:hover{background:#f9fafb}
+.btn.pri{background:#1D9E75;color:white;border-color:#1D9E75}.btn.pri:hover{background:#0F6E56}
+.btn.sm{height:30px;padding:0 10px;font-size:12px}
+.btn.red{color:#ef4444;border-color:#fca5a5}.btn.red:hover{background:#fef2f2}
+.btn.blue{color:#3b82f6;border-color:#93c5fd}.btn.blue:hover{background:#eff6ff}
+.row{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:90px}
+.fld label{font-size:12px;color:#6b7280;font-weight:500}
+.tlist{display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto}
+.ti{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid #f3f4f6;transition:border 0.15s}
+.ti:hover{border-color:#e5e7eb}.ti:hover .rm{opacity:1}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ti-main{flex:1;min-width:0}
+.ti-desc{font-size:13px;font-weight:500;color:#111}
+.ti-meta{font-size:11px;color:#9ca3af;margin-top:1px}
+.ti-right{display:flex;align-items:center;gap:8px}
+.ti-amt{font-size:13px;font-weight:700;color:#ef4444}
+.ti-amt.inc{color:#1D9E75}
+.rm{font-size:18px;cursor:pointer;color:#d1d5db;opacity:0;transition:opacity 0.15s;line-height:1}
+.rm:hover{color:#ef4444}
+.empty{text-align:center;padding:2.5rem;color:#9ca3af;font-size:13px}
+.cw{position:relative;width:100%;height:220px}
+.mood-btns{display:flex;gap:6px;flex-wrap:wrap}
+.mb{padding:5px 11px;border:1px solid #e5e7eb;border-radius:20px;font-size:12px;cursor:pointer;background:white;color:#6b7280;transition:all 0.15s;font-weight:500}
+.mb.ms{border-color:#1D9E75;color:#1D9E75;background:#ecfdf5}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.risk-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.rbtn{padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;cursor:pointer;background:white;color:#6b7280;transition:all 0.15s;flex:1;text-align:center;font-weight:500}
+.rbtn.sel-low{border-color:#1D9E75;color:#1D9E75;background:#ecfdf5}
+.rbtn.sel-mod{border-color:#3b82f6;color:#3b82f6;background:#eff6ff}
+.rbtn.sel-hi{border-color:#f59e0b;color:#f59e0b;background:#fffbeb}
+.rbtn.sel-agg{border-color:#ef4444;color:#ef4444;background:#fef2f2}
+.alloc-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;margin:12px 0}
+.alloc-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:white;overflow:hidden;white-space:nowrap;transition:width 0.5s}
+.leg-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7280}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.stbl{width:100%;border-collapse:collapse;font-size:13px}
+.stbl th{font-size:11px;color:#9ca3af;text-align:left;padding:7px 10px;border-bottom:1px solid #f3f4f6;font-weight:600;background:#f9fafb}
+.stbl td{padding:9px 10px;border-bottom:1px solid #f9fafb;vertical-align:middle}
+.stbl tr:last-child td{border:none}
+.stbl tr:hover td{background:#f9fafb}
+.sim-slider{margin:12px 0}
+.sim-slider label{font-size:13px;color:#6b7280;display:flex;justify-content:space-between;margin-bottom:5px;font-weight:500}
+.sim-slider input[type=range]{width:100%;accent-color:#1D9E75}
+.sip-result{background:#f0fdf4;border-radius:10px;padding:1rem;margin-top:1rem;border:1px solid #bbf7d0}
+.sip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sip-stat .sv{font-size:18px;font-weight:700;color:#1D9E75;text-align:center}
+.sip-stat .sl{font-size:11px;color:#6b7280;margin-top:3px;text-align:center}
+.score-wrap{display:flex;align-items:center;gap:24px;margin-bottom:1rem}
+.score-ring{position:relative;width:90px;height:90px;flex-shrink:0}
+.score-ring svg{width:90px;height:90px}
+.score-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:22px;font-weight:700;color:#111}
+.sb2{margin-bottom:9px}
+.sb2 .sbl{display:flex;justify-content:space-between;font-size:12px;color:#6b7280;margin-bottom:4px;font-weight:500}
+.sbt{height:7px;background:#f3f4f6;border-radius:4px;overflow:hidden}
+.sbf{height:100%;border-radius:4px;transition:width 0.5s}
+.ins-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ins{padding:13px;border-radius:10px;border:1px solid #e5e7eb;font-size:13px;line-height:1.6}
+.ins .it{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px}
+.ins.warn{background:#fffbeb;border-color:#fcd34d}.ins.warn .it{color:#92400e}.ins.warn{color:#78350f}
+.ins.good{background:#f0fdf4;border-color:#86efac}.ins.good .it{color:#14532d}.ins.good{color:#166534}
+.ins.info{background:#eff6ff;border-color:#93c5fd}.ins.info .it{color:#1e3a8a}.ins.info{color:#1d4ed8}
+.ins.neutral{background:#f9fafb}.ins.neutral .it{color:#9ca3af}
+.ai-msgs{min-height:180px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 0;margin-bottom:12px}
+.msg{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7;max-width:88%}
+.msg.user{background:#1D9E75;color:white;align-self:flex-end;border-radius:12px 12px 3px 12px}
+.msg.ai{background:#f3f4f6;color:#111;align-self:flex-start;border-radius:12px 12px 12px 3px}
+.msg.loading{color:#9ca3af;font-style:italic}
+.qbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.qb{font-size:12px;padding:6px 12px;border:1px solid #bbf7d0;border-radius:20px;color:#1D9E75;cursor:pointer;background:#f0fdf4;transition:all 0.15s;font-weight:500}
+.qb:hover{background:#dcfce7}
+.cache-note{font-size:11px;color:#9ca3af;text-align:center;margin-top:6px;min-height:14px}
+.report-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.step-list{display:flex;flex-direction:column}
+.step{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid #f3f4f6}
+.step:last-child{border:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:#1D9E75;color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-title{font-size:13px;font-weight:600;margin-bottom:3px;color:#111}
+.step-desc{font-size:12px;color:#6b7280;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="logo">FiAI</div>
+    <div>
+      <h1>FinAI — Personal Finance OS</h1>
+      <p id="hdr-sub">Loading...</p>
+    </div>
+  </div>
+  <div class="auth-bar" id="auth-bar"></div>
+</div>
+
+<div class="config-banner" id="config-banner" style="display:none">
+  <strong>Setup needed:</strong> Open this file in VS Code → press <code>Ctrl+H</code> → find <code>PASTE_YOUR_API_KEY_HERE</code> → replace all 6 values with your Firebase config. Then save and re-open.
+</div>
+
+<div id="login-screen" class="login-screen" style="display:none">
+  <h2>Welcome to FinAI</h2>
+  <p>Sign in with Google to sync your data across all your devices. Your data is stored privately in your own Firebase account.</p>
+  <button class="google-btn" onclick="signInGoogle()">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Continue with Google
+  </button>
+  <br>
+  <button class="offline-btn" onclick="useOffline()">Continue without signing in (offline mode)</button>
+</div>
+
+<div id="main-app" style="display:none">
+  <div class="tabs">
+    <button class="tab active" onclick="sw('dashboard',this)">Dashboard</button>
+    <button class="tab" onclick="sw('expenses',this)">Expenses</button>
+    <button class="tab" onclick="sw('invest',this)">Invest Plan</button>
+    <button class="tab" onclick="sw('portfolio',this)">Portfolio</button>
+    <button class="tab" onclick="sw('sip',this)">SIP Calc</button>
+    <button class="tab" onclick="sw('health',this)">Health Score</button>
+    <button class="tab" onclick="sw('reports',this)">Reports</button>
+    <button class="tab" onclick="sw('advisor',this)">AI Advisor</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="tab-dashboard" class="sec active">
+    <div class="metrics">
+      <div class="met gv"><div class="lbl">Income</div><div class="val" id="m-inc">₹0</div><div class="sub">this month</div></div>
+      <div class="met rv"><div class="lbl">Expenses</div><div class="val" id="m-exp">₹0</div><div class="sub">this month</div></div>
+      <div class="met" id="m-sav-c"><div class="lbl">Net savings</div><div class="val" id="m-sav">₹0</div><div class="sub" id="m-sav-s">—</div></div>
+      <div class="met pv"><div class="lbl">Portfolio value</div><div class="val" id="m-port">₹0</div><div class="sub" id="m-port-s">0 holdings</div></div>
+    </div>
+    <div class="card"><div class="ct">Spending by category</div><div class="cw"><canvas id="catChart"></canvas></div></div>
+    <div class="card"><div class="ct">Recent transactions</div><div id="recent-list" class="tlist"></div></div>
+  </div>
+
+  <!-- EXPENSES -->
+  <div id="tab-expenses" class="sec">
+    <div class="card">
+      <div class="ct">Add transaction</div>
+      <div class="row" style="margin-bottom:10px">
+        <div class="fld" style="flex:2;min-width:140px"><label>Description</label><input id="e-desc" placeholder="e.g. Zomato order, Salary credited..."/></div>
+        <div class="fld"><label>Amount (₹)</label><input type="number" id="e-amt" placeholder="0" min="0"/></div>
+        <div class="fld"><label>Type</label><select id="e-type"><option value="expense">Expense</option><option value="income">Income</option></select></div>
+      </div>
+      <div class="row">
+        <div class="fld"><label>Category</label><select id="e-cat"><option value="food">Food & Dining</option><option value="transport">Transport</option><option value="shopping">Shopping</option><option value="health">Health</option><option value="entertainment">Entertainment</option><option value="bills">Bills & Utilities</option><option value="education">Education</option><option value="investment">Investment</option><option value="other">Other</option></select></div>
+        <div class="fld"><label>How did you feel?</label><div class="mood-btns"><button class="mb ms" data-m="planned" onclick="sm(this)">Planned</button><button class="mb" data-m="impulsive" onclick="sm(this)">Impulsive</button><button class="mb" data-m="necessary" onclick="sm(this)">Necessary</button><button class="mb" data-m="regret" onclick="sm(this)">Regret</button><button class="mb" data-m="happy" onclick="sm(this)">Happy</button></div></div>
+        <button class="btn pri" onclick="addT()" style="align-self:end;flex-shrink:0">Add</button>
+      </div>
+    </div>
+    <div class="card"><div class="ct">All transactions</div><div id="all-list" class="tlist"></div></div>
+  </div>
+
+  <!-- INVEST PLAN -->
+  <div id="tab-invest" class="sec">
+    <div class="card">
+      <div class="ct">Choose your risk profile</div>
+      <div class="risk-btns">
+        <button class="rbtn" id="rb-low" onclick="setRisk('low')">Conservative<br><span style="font-size:11px;font-weight:400">low risk · steady growth</span></button>
+        <button class="rbtn" id="rb-mod" onclick="setRisk('moderate')">Moderate<br><span style="font-size:11px;font-weight:400">balanced risk & return</span></button>
+        <button class="rbtn" id="rb-hi" onclick="setRisk('high')">Aggressive<br><span style="font-size:11px;font-weight:400">high risk · high reward</span></button>
+        <button class="rbtn" id="rb-agg" onclick="setRisk('ultra')">Ultra Aggressive<br><span style="font-size:11px;font-weight:400">max equity · long horizon</span></button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Recommended allocation</div>
+      <div class="alloc-bar" id="alloc-bar"></div>
+      <div class="leg-row" id="alloc-legend"></div>
+      <p id="alloc-desc" style="font-size:13px;color:#6b7280"></p>
+    </div>
+    <div class="card"><div class="ct">Your investment roadmap</div><div class="step-list" id="invest-steps"></div></div>
+    <div class="card"><div class="ct">Recommended instruments for India</div><div id="instruments-list"></div></div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div id="tab-portfolio" class="sec">
+    <div class="card">
+      <div class="ct">Add holding</div>
+      <div class="row" style="margin-bottom:10px">
+        <div class="fld"><label>Name</label><input id="p-name" placeholder="e.g. HDFC Bank, Nifty 50 ETF"/></div>
+        <div class="fld"><label>Type</label><select id="p-type"><option value="stock">Stock</option><option value="mf">Mutual Fund</option><option value="etf">ETF</option><option value="sip">SIP</option><option value="bond">Bond/FD</option><option value="gold">Gold</option></select></div>
+      </div>
+      <div class="row">
+        <div class="fld"><label>Quantity</label><input type="number" id="p-qty" placeholder="10" min="0" step="any"/></div>
+        <div class="fld"><label>Buy price (₹)</label><input type="number" id="p-buy" placeholder="0" min="0" step="any"/></div>
+        <div class="fld"><label>Current price (₹)</label><input type="number" id="p-cur" placeholder="0" min="0" step="any"/></div>
+        <button class="btn pri" onclick="addH()" style="align-self:end;flex-shrink:0">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Holdings</div>
+      <div style="overflow-x:auto">
+        <table class="stbl" id="port-table"><thead><tr><th>Name</th><th>Type</th><th>Qty</th><th>Buy price</th><th>Current</th><th>Value</th><th>P&L</th><th>Return %</th><th></th></tr></thead><tbody id="port-body"></tbody></table>
+      </div>
+      <div id="port-empty" class="empty">No holdings yet. Add your first stock, mutual fund, or ETF above.</div>
+    </div>
+    <div class="card"><div class="ct">Portfolio composition</div><div class="cw"><canvas id="portChart"></canvas></div></div>
+  </div>
+
+  <!-- SIP CALC -->
+  <div id="tab-sip" class="sec">
+    <div class="card">
+      <div class="ct">SIP calculator</div>
+      <div class="sim-slider"><label><span>Monthly SIP amount (₹)</span><span id="sip-av">₹5,000</span></label><input type="range" id="sip-a" min="500" max="100000" step="500" value="5000" oninput="calcSIP()"/></div>
+      <div class="sim-slider"><label><span>Expected annual return</span><span id="sip-rv">12%</span></label><input type="range" id="sip-r" min="4" max="30" step="1" value="12" oninput="calcSIP()"/></div>
+      <div class="sim-slider"><label><span>Investment duration</span><span id="sip-yv">10 years</span></label><input type="range" id="sip-y" min="1" max="30" step="1" value="10" oninput="calcSIP()"/></div>
+      <div class="sip-result">
+        <div class="sip-grid">
+          <div class="sip-stat"><div class="sv" id="sip-inv">—</div><div class="sl">Total invested</div></div>
+          <div class="sip-stat"><div class="sv" id="sip-ret">—</div><div class="sl">Estimated returns</div></div>
+          <div class="sip-stat"><div class="sv" id="sip-tot">—</div><div class="sl">Maturity value</div></div>
+        </div>
+      </div>
+      <div class="cw" style="margin-top:1rem"><canvas id="sipChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- HEALTH SCORE -->
+  <div id="tab-health" class="sec">
+    <div class="card">
+      <div class="ct">Financial health score</div>
+      <div class="score-wrap">
+        <div class="score-ring">
+          <svg viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="#dcfce7" stroke-width="9"/><circle id="sc-arc" cx="45" cy="45" r="38" fill="none" stroke="#1D9E75" stroke-width="9" stroke-dasharray="239" stroke-dashoffset="239" stroke-linecap="round" transform="rotate(-90 45 45)"/></svg>
+          <div class="score-num" id="sc-big">—</div>
+        </div>
+        <div style="flex:1">
+          <div class="sb2"><div class="sbl"><span>Savings rate</span><span id="sb-sv">0%</span></div><div class="sbt"><div class="sbf" id="sf-sv" style="width:0%;background:#1D9E75"></div></div></div>
+          <div class="sb2"><div class="sbl"><span>Budget discipline</span><span id="sb-bd">—</span></div><div class="sbt"><div class="sbf" id="sf-bd" style="width:80%;background:#3b82f6"></div></div></div>
+          <div class="sb2"><div class="sbl"><span>Impulse control</span><span id="sb-ic">0%</span></div><div class="sbt"><div class="sbf" id="sf-ic" style="width:0%;background:#ec4899"></div></div></div>
+          <div class="sb2"><div class="sbl"><span>Investment activity</span><span id="sb-ia">0%</span></div><div class="sbt"><div class="sbf" id="sf-ia" style="width:0%;background:#8b5cf6"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="ct">Smart insights (no AI credits)</div><div class="ins-grid" id="ins-grid"><div class="ins neutral"><div class="it">Getting started</div>Add transactions and portfolio holdings to unlock personalised insights.</div></div></div>
+  </div>
+
+  <!-- REPORTS -->
+  <div id="tab-reports" class="sec">
+    <div class="card">
+      <div class="ct">Export & reports</div>
+      <div class="report-btns">
+        <button class="btn pri" onclick="genPDF()">Download PDF report</button>
+        <button class="btn blue" onclick="exportJSON()">Export data as JSON</button>
+        <button class="btn" onclick="document.getElementById('import-file').click()">Import JSON backup</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)"/>
+      </div>
+      <p style="font-size:13px;color:#6b7280;line-height:1.8">
+        <strong style="color:#374151">PDF report</strong> — opens a print-ready financial summary. Use browser's Save as PDF option.<br>
+        <strong style="color:#374151">JSON export</strong> — downloads all your data as a backup file to move between devices.<br>
+        <strong style="color:#374151">JSON import</strong> — restore a previously exported backup file.
+      </p>
+    </div>
+    <div class="card">
+      <div class="ct">Cloud sync status</div>
+      <div id="sync-status-detail" style="font-size:13px;color:#6b7280;line-height:1.8;margin-bottom:1rem">Checking...</div>
+      <div class="ct" style="margin-top:1rem">Firebase setup guide</div>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div><div class="step-title">Create Firebase project</div><div class="step-desc">Go to firebase.google.com → Add project → name it finai-app → disable analytics → Create.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div><div class="step-title">Enable Google Authentication</div><div class="step-desc">Firebase console → Build → Authentication → Get started → Google → Enable → Save.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div><div class="step-title">Create Firestore Database</div><div class="step-desc">Build → Firestore Database → Create database → Test mode → Region: asia-south1 → Done.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div><div class="step-title">Paste your config into this file</div><div class="step-desc">Project settings → Your apps → web icon → Register → copy firebaseConfig → in VS Code press Ctrl+H → find PASTE_YOUR_API_KEY_HERE → replace all 6 values.</div></div></div>
+        <div class="step"><div class="step-num">5</div><div><div class="step-title">Deploy to GitHub Pages & add domain</div><div class="step-desc">Upload index.html to GitHub → Settings → Pages → Deploy. Then in Firebase → Authentication → Settings → Authorized domains → add yourusername.github.io</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI ADVISOR -->
+  <div id="tab-advisor" class="sec">
+    <div class="card">
+      <div class="ct">AI financial advisor</div>
+      <div class="qbtns">
+        <button class="qb" onclick="ask('Give me a full personalised financial analysis and action plan')">Full analysis</button>
+        <button class="qb" onclick="ask('What should I invest in based on my risk profile and savings?')">Investment picks</button>
+        <button class="qb" onclick="ask('How do I build wealth from scratch in India?')">Build wealth</button>
+        <button class="qb" onclick="ask('Explain SIP and how much I should invest monthly')">SIP guide</button>
+        <button class="qb" onclick="ask('How can I minimise tax on my income and investments?')">Tax saving</button>
+      </div>
+      <div class="ai-msgs" id="ai-msgs">
+        <div class="msg ai">Hello! I'm your AI finance advisor. Add your transactions and portfolio, then ask me anything about investing, saving, or tax planning in India.</div>
+      </div>
+      <div class="row">
+        <input id="ai-inp" placeholder="Ask about your finances..." onkeydown="if(event.key==='Enter')ask()"/>
+        <button class="btn pri" onclick="ask()">Ask</button>
+      </div>
+      <div class="cache-note" id="cache-note"></div>
+    </div>
+  </div>
+
+</div><!-- end main-app -->
+</div><!-- end app -->
+
+<!-- ============================================================
+     STEP 1: PASTE YOUR FIREBASE CONFIG HERE
+     In VS Code: press Ctrl+H
+     Find:    PASTE_YOUR_API_KEY_HERE
+     Replace: your actual value from Firebase Project Settings
+     Do this for all 6 values below
+     ============================================================ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+// ↓↓↓ REPLACE THESE 6 VALUES WITH YOUR FIREBASE CONFIG ↓↓↓
+const firebaseConfig = {
+  apiKey: "AIzaSyBwSrdPEtFLcb2c8v4BxdNrIehtE1Y_Ssw",
+  authDomain: "finai-app-2c6cd.firebaseapp.com",
+  projectId: "finai-app-2c6cd",
+  storageBucket: "finai-app-2c6cd.firebasestorage.app",
+  messagingSenderId: "247964789079",
+  appId: "1:247964789079:web:cb74939130c58cf3283612"
+};
+// ↑↑↑ REPLACE THESE 6 VALUES WITH YOUR FIREBASE CONFIG ↑↑↑
+
+const IS_CONFIGURED = firebaseConfig.apiKey !== "PASTE_YOUR_API_KEY_HERE";
+
+let app, auth, db, currentUser = null;
+let syncTimeout = null, firestoreUnsub = null;
+let isOnlineMode = false;
+
+if (IS_CONFIGURED) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  onAuthStateChanged(auth, user => {
+    if (user) { currentUser = user; onLogin(user); }
+    else { currentUser = null; showLoginScreen(); }
+  });
+} else {
+  document.getElementById('config-banner').style.display = 'block';
+  useOffline();
+}
+
+window.signInGoogle = async function() {
+  if (!IS_CONFIGURED) { useOffline(); return; }
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    alert('Sign in failed.\n\nReason: ' + e.message + '\n\nMake sure:\n1. Your domain is added to Firebase Authorized Domains\n2. You are opening this on localhost or GitHub Pages (not as a file://)');
+  }
+};
+
+window.signOutUser = async function() {
+  if (auth) await signOut(auth);
+  currentUser = null;
+  showLoginScreen();
+};
+
+window.useOffline = function() {
+  isOnlineMode = false;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  document.getElementById('hdr-sub').textContent = 'Offline mode — data saved in this browser only';
+  document.getElementById('auth-bar').innerHTML = `<span style="font-size:12px;color:#9ca3af">Offline</span><button class="btn sm" onclick="document.getElementById('login-screen').style.display='block';document.getElementById('main-app').style.display='none'">Sign in</button>`;
+  loadLocal(); renderAll(); renderInvest(); calcSIP();
+};
+
+async function onLogin(user) {
+  isOnlineMode = true;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  document.getElementById('hdr-sub').textContent = 'Synced across all your devices';
+  document.getElementById('auth-bar').innerHTML = `
+    <div class="user-pill">
+      <div class="user-avatar">${(user.displayName||'U')[0].toUpperCase()}</div>
+      <span>${user.displayName||user.email}</span>
+      <div class="sync-dot" id="sync-dot"></div>
+    </div>
+    <button class="btn sm" onclick="signOutUser()">Sign out</button>`;
+  await loadFirestore(user.uid);
+  listenFirestore(user.uid);
+  renderAll(); renderInvest(); calcSIP();
+}
+
+function showLoginScreen() {
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('hdr-sub').textContent = 'Sign in to sync across all devices';
+  document.getElementById('auth-bar').innerHTML = `<button class="btn pri" onclick="signInGoogle()">Sign in with Google</button>`;
+}
+
+// ── DATA LAYER ──────────────────────────────────────────────
+const CC={food:'#1D9E75',transport:'#3b82f6',shopping:'#ec4899',health:'#ef4444',entertainment:'#f59e0b',bills:'#8b5cf6',education:'#22c55e',investment:'#0F6E56',other:'#9ca3af'};
+const CL={food:'Food & Dining',transport:'Transport',shopping:'Shopping',health:'Health',entertainment:'Entertainment',bills:'Bills & Utilities',education:'Education',investment:'Investment',other:'Other'};
+const TC={stock:'#3b82f6',mf:'#1D9E75',etf:'#8b5cf6',sip:'#0F6E56',bond:'#9ca3af',gold:'#f59e0b'};
+
+let txns=[], portfolio=[], budgets={}, aiCache={}, curRisk='moderate', selMood='planned';
+let catChart=null, portChart=null, sipChart=null;
+
+function loadLocal() {
+  txns      = JSON.parse(localStorage.getItem('finai_txns')  || '[]');
+  portfolio = JSON.parse(localStorage.getItem('finai_port')  || '[]');
+  budgets   = JSON.parse(localStorage.getItem('finai_budgets')|| '{}');
+  aiCache   = JSON.parse(localStorage.getItem('finai_cache') || '{}');
+  curRisk   = localStorage.getItem('finai_risk') || 'moderate';
+}
+
+async function loadFirestore(uid) {
+  try {
+    const snap = await getDoc(doc(db,'users',uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      txns=d.txns||[]; portfolio=d.portfolio||[]; budgets=d.budgets||{}; aiCache=d.aiCache||{}; curRisk=d.curRisk||'moderate';
+    } else { loadLocal(); }
+  } catch(e) { loadLocal(); }
+}
+
+function listenFirestore(uid) {
+  if (firestoreUnsub) firestoreUnsub();
+  firestoreUnsub = onSnapshot(doc(db,'users',uid), snap => {
+    if (snap.exists() && !snap.metadata.hasPendingWrites) {
+      const d=snap.data(); txns=d.txns||[]; portfolio=d.portfolio||[]; budgets=d.budgets||{}; curRisk=d.curRisk||'moderate';
+      renderAll(); setSyncDot('synced');
+    }
+  });
+}
+
+function saveLocal() {
+  localStorage.setItem('finai_txns',      JSON.stringify(txns));
+  localStorage.setItem('finai_port',      JSON.stringify(portfolio));
+  localStorage.setItem('finai_budgets',   JSON.stringify(budgets));
+  localStorage.setItem('finai_cache',     JSON.stringify(aiCache));
+  localStorage.setItem('finai_risk',      curRisk);
+}
+
+async function saveFirestore() {
+  if (!isOnlineMode || !currentUser) return;
+  setSyncDot('syncing');
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(async () => {
+    try {
+      await setDoc(doc(db,'users',currentUser.uid), {txns,portfolio,budgets,aiCache,curRisk,updatedAt:new Date().toISOString()});
+      setSyncDot('synced');
+    } catch(e) { setSyncDot('error'); }
+  }, 800);
+}
+
+function save() { saveLocal(); saveFirestore(); }
+
+function setSyncDot(state) {
+  const dot = document.getElementById('sync-dot');
+  if (dot) {
+    dot.className = 'sync-dot' + (state==='synced'?' synced':state==='syncing'?' syncing':'');
+    if(state==='error') dot.style.background='#ef4444';
+    dot.title = state==='synced'?'All data synced':state==='syncing'?'Saving...':'Sync error';
+  }
+  const sd = document.getElementById('sync-status-detail');
+  if (sd) {
+    if (!isOnlineMode) { sd.innerHTML='<span style="color:#f59e0b">Offline mode — data is local only. Sign in with Google to enable cloud sync.</span>'; return; }
+    if (!IS_CONFIGURED) { sd.innerHTML='<span style="color:#ef4444">Firebase not configured yet. Follow the steps below.</span>'; return; }
+    if (state==='synced') sd.innerHTML=`<span style="color:#1D9E75">Synced to Firebase</span> as <strong>${currentUser?.displayName||currentUser?.email}</strong><br>Your data loads automatically on any device when you sign in.`;
+    else if (state==='syncing') sd.innerHTML='<span style="color:#f59e0b">Saving to cloud...</span>';
+    else sd.innerHTML='<span style="color:#ef4444">Sync failed. Check your internet and Firebase config.</span>';
+  }
+}
+
+// ── UI HELPERS ──────────────────────────────────────────────
+window.sm = el => { document.querySelectorAll('.mb').forEach(b=>b.classList.remove('ms')); el.classList.add('ms'); selMood=el.dataset.m; };
+
+window.sw = (tab, el) => {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(el) el.classList.add('active');
+  if(tab==='invest')    renderInvest();
+  if(tab==='portfolio') renderPortfolio();
+  if(tab==='sip')       calcSIP();
+  if(tab==='health')    renderHealth();
+  if(tab==='reports')   setSyncDot(isOnlineMode?'synced':'offline');
+};
+
+window.addT = () => {
+  const desc=document.getElementById('e-desc').value.trim();
+  const amt=parseFloat(document.getElementById('e-amt').value);
+  const type=document.getElementById('e-type').value;
+  const cat=document.getElementById('e-cat').value;
+  if(!desc||!amt||amt<=0){alert('Please fill in the description and a valid amount.');return;}
+  txns.unshift({id:Date.now(),desc,amt,type,cat,mood:selMood,date:new Date().toLocaleDateString('en-IN')});
+  save(); renderAll();
+  document.getElementById('e-desc').value=''; document.getElementById('e-amt').value='';
+};
+
+window.removeT = id => { txns=txns.filter(t=>t.id!==id); save(); renderAll(); };
+
+window.addH = () => {
+  const name=document.getElementById('p-name').value.trim();
+  const type=document.getElementById('p-type').value;
+  const qty=parseFloat(document.getElementById('p-qty').value);
+  const buy=parseFloat(document.getElementById('p-buy').value);
+  const cur=parseFloat(document.getElementById('p-cur').value);
+  if(!name||!qty||!buy||!cur){alert('Please fill in all portfolio fields.');return;}
+  portfolio.push({id:Date.now(),name,type,qty,buy,cur});
+  save(); renderPortfolio(); renderDash();
+  ['p-name','p-qty','p-buy','p-cur'].forEach(id=>document.getElementById(id).value='');
+};
+
+window.removeH = id => { portfolio=portfolio.filter(h=>h.id!==id); save(); renderPortfolio(); renderDash(); };
+
+window.setRisk = r => {
+  curRisk=r; save();
+  const map={low:'low',moderate:'mod',high:'hi',ultra:'agg'};
+  ['low','mod','hi','agg'].forEach(x=>document.getElementById('rb-'+x).className='rbtn');
+  document.getElementById('rb-'+map[r]).className='rbtn sel-'+map[r];
+  renderInvest();
+};
+
+// ── RENDER ──────────────────────────────────────────────────
+function getInc(){ return txns.filter(t=>t.type==='income').reduce((a,t)=>a+t.amt,0); }
+function getExp(){ return txns.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amt,0); }
+function getPortVal(){ return portfolio.reduce((a,h)=>a+h.qty*h.cur,0); }
+function getPortPL(){ return portfolio.reduce((a,h)=>a+(h.cur-h.buy)*h.qty,0); }
+
+function renderAll(){ renderDash(); renderExpenses(); }
+
+function renderDash(){
+  const inc=getInc(),exp=getExp(),sav=inc-exp;
+  document.getElementById('m-inc').textContent='₹'+inc.toLocaleString('en-IN');
+  document.getElementById('m-exp').textContent='₹'+exp.toLocaleString('en-IN');
+  document.getElementById('m-sav').textContent=(sav<0?'-':'')+'₹'+Math.abs(sav).toLocaleString('en-IN');
+  document.getElementById('m-sav-s').textContent=sav>=0?'saved this month':'over budget';
+  document.getElementById('m-sav-c').className='met '+(sav>=0?'gv':'rv');
+  document.getElementById('m-port').textContent='₹'+Math.round(getPortVal()).toLocaleString('en-IN');
+  document.getElementById('m-port-s').textContent=portfolio.length+' holding'+(portfolio.length!==1?'s':'');
+  const catT={}; txns.filter(t=>t.type==='expense').forEach(t=>{catT[t.cat]=(catT[t.cat]||0)+t.amt;});
+  const cats=Object.keys(catT);
+  if(catChart) catChart.destroy();
+  if(cats.length>0){
+    catChart=new Chart(document.getElementById('catChart'),{type:'doughnut',data:{labels:cats.map(c=>CL[c]||c),datasets:[{data:cats.map(c=>catT[c]),backgroundColor:cats.map(c=>CC[c]||'#888'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:10,padding:8}},tooltip:{callbacks:{label:i=>' ₹'+i.raw.toLocaleString('en-IN')}}}}});
+  }
+  const rl=document.getElementById('recent-list');
+  const rec=txns.slice(0,5);
+  rl.innerHTML=rec.length?rec.map(t=>tHTML(t,false)).join(''):'<div class="empty">No transactions yet. Add some in the Expenses tab.</div>';
+}
+
+function renderExpenses(){
+  const al=document.getElementById('all-list');
+  al.innerHTML=txns.length?txns.map(t=>tHTML(t,true)).join(''):'<div class="empty">No transactions yet.</div>';
+}
+
+function tHTML(t,rm){
+  const mc={planned:'#1D9E75',necessary:'#3b82f6',happy:'#22c55e',impulsive:'#f59e0b',regret:'#ef4444'};
+  return`<div class="ti">
+    <div class="dot" style="background:${CC[t.cat]||'#888'}"></div>
+    <div class="ti-main"><div class="ti-desc">${t.desc}</div><div class="ti-meta">${CL[t.cat]||t.cat} · ${t.date}</div></div>
+    <div class="ti-right">
+      <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#f9fafb;border-left:2px solid ${mc[t.mood]||'#888'};color:#6b7280">${t.mood||'—'}</span>
+      <span class="ti-amt ${t.type==='income'?'inc':''}">${t.type==='income'?'+':'-'}₹${t.amt.toLocaleString('en-IN')}</span>
+      ${rm?`<span class="rm" onclick="removeT(${t.id})">×</span>`:''}
+    </div>
+  </div>`;
+}
+
+const RISK_ALLOC={
+  low:{eq:30,debt:50,gold:10,intl:5,cash:5,desc:'Capital protection priority. Mostly debt and bonds with limited equity.',color:['#1D9E75','#8b5cf6','#f59e0b','#3b82f6','#9ca3af'],labels:['Equity 30%','Debt 50%','Gold 10%','Intl 5%','Cash 5%']},
+  moderate:{eq:60,debt:25,gold:10,intl:5,cash:0,desc:'Balanced growth and stability. Good for 5–10 year horizon.',color:['#1D9E75','#8b5cf6','#f59e0b','#3b82f6'],labels:['Equity 60%','Debt 25%','Gold 10%','Intl 5%']},
+  high:{eq:75,debt:10,gold:5,intl:10,cash:0,desc:'Majority equity for maximum long-term growth. 10+ year horizon.',color:['#1D9E75','#8b5cf6','#f59e0b','#3b82f6'],labels:['Equity 75%','Debt 10%','Gold 5%','Intl 10%']},
+  ultra:{eq:90,debt:0,gold:5,intl:5,cash:0,desc:'Almost entirely equity. For young investors with 15+ year horizon.',color:['#1D9E75','#f59e0b','#3b82f6'],labels:['Equity 90%','Gold 5%','Intl 5%']}
+};
+const INV_STEPS={
+  low:['Open FD with SBI/HDFC — 6.5–7% guaranteed return with zero risk','Invest in UTI Liquid Fund for better return than savings account','Add SBI ELSS for ₹1.5L tax deduction under 80C with ~12% avg return','Consider Sovereign Gold Bonds (SGB) — gold returns + 2.5% extra interest per year'],
+  moderate:['Start SIP in UTI Nifty 50 Index Fund — ₹2000/month minimum','Add HDFC Mid-Cap Opportunities Fund for extra growth potential','Keep 25% in ICICI Short Duration Debt Fund for stability','Set up auto-SIP — money auto-invests every month without thinking'],
+  high:['Core: Nifty 50 ETF via Zerodha or Groww (50% of equity portion)','Growth: 2 mid/small cap mutual funds (30% of equity portion)','Thematic: 1 sectoral fund — IT or Pharma ETF (20% of equity portion)','Use Sovereign Gold Bond as inflation hedge, not physical gold'],
+  ultra:['80% equity: 40% large-cap index + 30% mid-cap + 10% small-cap funds','10% international: Motilal Nasdaq 100 FOF or Mirae S&P 500 ETF FOF','Start individual stock picking only after 2+ years of mutual fund experience','Use Zerodha Kite — check PE ratio, ROE, and debt-to-equity before buying any stock']
+};
+
+function renderInvest(){
+  const a=RISK_ALLOC[curRisk];
+  const map={low:'low',moderate:'mod',high:'hi',ultra:'agg'};
+  ['low','mod','hi','agg'].forEach(x=>document.getElementById('rb-'+x).className='rbtn');
+  document.getElementById('rb-'+map[curRisk]).className='rbtn sel-'+map[curRisk];
+  const segs=[];
+  if(a.eq)   segs.push({w:a.eq,  c:a.color[0]});
+  if(a.debt) segs.push({w:a.debt,c:a.color[1]});
+  if(a.gold) segs.push({w:a.gold,c:a.color[a.debt?2:1]});
+  if(a.intl) segs.push({w:a.intl,c:a.color[a.debt?3:2]});
+  if(a.cash) segs.push({w:a.cash,c:'#9ca3af'});
+  document.getElementById('alloc-bar').innerHTML=segs.map(s=>`<div class="alloc-seg" style="width:${s.w}%;background:${s.c}">${s.w>12?s.w+'%':''}</div>`).join('');
+  document.getElementById('alloc-legend').innerHTML=a.labels.map((l,i)=>`<div class="leg-item"><div class="leg-dot" style="background:${a.color[i]}"></div>${l}</div>`).join('');
+  document.getElementById('alloc-desc').textContent=a.desc;
+  document.getElementById('invest-steps').innerHTML=INV_STEPS[curRisk].map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div><div class="step-desc">${s}</div></div></div>`).join('');
+  const inst={
+    low:[{n:'SBI / HDFC FD',t:'Bond/FD',r:'6.5–7%',risk:'Very Low'},{n:'UTI Liquid Fund',t:'Liquid MF',r:'6.5–7.5%',risk:'Very Low'},{n:'SBI ELSS Fund',t:'ELSS MF',r:'12–14%',risk:'Medium'},{n:'Sovereign Gold Bond',t:'Gold',r:'CMP + 2.5%',risk:'Low'}],
+    moderate:[{n:'UTI Nifty 50 Index',t:'Index MF',r:'12–14%',risk:'Medium'},{n:'HDFC Mid-Cap Opp',t:'MF',r:'15–18%',risk:'Med-High'},{n:'ICICI Short Duration',t:'Debt MF',r:'7–8%',risk:'Low'},{n:'Mirae Asset ELSS',t:'ELSS MF',r:'13–16%',risk:'Medium'},{n:'Gold BeES ETF',t:'ETF',r:'Market linked',risk:'Low'}],
+    high:[{n:'Nippon India Small Cap',t:'MF',r:'18–22%',risk:'High'},{n:'Nifty 50 ETF (NSE)',t:'ETF',r:'12–15%',risk:'Medium'},{n:'Axis Midcap Fund',t:'MF',r:'16–20%',risk:'High'},{n:'SBI Tech Opp Fund',t:'Sectoral',r:'20%+',risk:'Very High'},{n:'Parag Parikh Flexi Cap',t:'MF',r:'15–18%',risk:'Medium'}],
+    ultra:[{n:'Direct Stocks (NSE/BSE)',t:'Equity',r:'Market returns',risk:'Very High'},{n:'Motilal Nasdaq 100 FOF',t:'Intl MF',r:'18–25%',risk:'High'},{n:'Quant Small Cap Fund',t:'MF',r:'25%+ (10yr)',risk:'Very High'},{n:'Nifty Midcap 150 ETF',t:'ETF',r:'15–20%',risk:'High'},{n:'Sovereign Gold Bond',t:'Gold',r:'CMP + 2.5%',risk:'Low'}]
+  };
+  document.getElementById('instruments-list').innerHTML=`<table class="stbl"><thead><tr><th>Instrument</th><th>Type</th><th>Avg return</th><th>Risk level</th></tr></thead><tbody>${(inst[curRisk]||[]).map(i=>`<tr><td style="font-weight:600">${i.n}</td><td><span class="badge" style="background:${TC[i.t.toLowerCase().split('/')[0].split(' ')[0]]||'#3b82f6'}20;color:${TC[i.t.toLowerCase().split('/')[0].split(' ')[0]]||'#3b82f6'}">${i.t}</span></td><td style="color:#1D9E75;font-weight:600">${i.r}</td><td>${i.risk}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderPortfolio(){
+  const tb=document.getElementById('port-body');
+  const empty=document.getElementById('port-empty');
+  const table=document.getElementById('port-table');
+  if(portfolio.length===0){table.style.display='none';empty.style.display='block';}
+  else{
+    table.style.display='';empty.style.display='none';
+    tb.innerHTML=portfolio.map(h=>{
+      const val=h.qty*h.cur,cost=h.qty*h.buy,pl=val-cost,plPct=pl/cost*100;
+      const pc=pl>=0?'#1D9E75':'#ef4444';
+      return`<tr><td style="font-weight:600">${h.name}</td><td><span class="badge" style="background:${TC[h.type]||'#888'}20;color:${TC[h.type]||'#888'}">${h.type.toUpperCase()}</span></td><td>${h.qty.toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>₹${h.buy.toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>₹${h.cur.toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td style="font-weight:600">₹${Math.round(val).toLocaleString('en-IN')}</td><td style="color:${pc};font-weight:600">${pl>=0?'+':'-'}₹${Math.round(Math.abs(pl)).toLocaleString('en-IN')}</td><td style="color:${pc};font-weight:600">${plPct>=0?'+':''}${plPct.toFixed(1)}%</td><td><button class="btn sm red" onclick="removeH(${h.id})">Remove</button></td></tr>`;
+    }).join('');
+  }
+  if(portChart) portChart.destroy();
+  if(portfolio.length>0){
+    const typeT={};portfolio.forEach(h=>{const k=h.type.toUpperCase();typeT[k]=(typeT[k]||0)+h.qty*h.cur;});
+    portChart=new Chart(document.getElementById('portChart'),{type:'doughnut',data:{labels:Object.keys(typeT),datasets:[{data:Object.values(typeT).map(v=>Math.round(v)),backgroundColor:Object.keys(typeT).map(k=>TC[k.toLowerCase()]||'#888'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:10,padding:8}},tooltip:{callbacks:{label:i=>' ₹'+i.raw.toLocaleString('en-IN')}}}}});
+  }
+}
+
+window.calcSIP = () => {
+  const amt=parseInt(document.getElementById('sip-a').value);
+  const rate=parseInt(document.getElementById('sip-r').value);
+  const yr=parseInt(document.getElementById('sip-y').value);
+  document.getElementById('sip-av').textContent='₹'+amt.toLocaleString('en-IN');
+  document.getElementById('sip-rv').textContent=rate+'%';
+  document.getElementById('sip-yv').textContent=yr+' year'+(yr>1?'s':'');
+  const months=yr*12,r=rate/100/12;
+  const fv=amt*(((Math.pow(1+r,months)-1)/r)*(1+r));
+  const invested=amt*months;
+  const fmt=n=>{if(n>=10000000)return'₹'+(n/10000000).toFixed(2)+'Cr';if(n>=100000)return'₹'+(n/100000).toFixed(1)+'L';return'₹'+Math.round(n).toLocaleString('en-IN');}
+  document.getElementById('sip-inv').textContent=fmt(invested);
+  document.getElementById('sip-ret').textContent=fmt(fv-invested);
+  document.getElementById('sip-tot').textContent=fmt(fv);
+  const labels=[],invD=[],fvD=[];
+  for(let y=1;y<=yr;y++){const m=y*12,r2=rate/100/12,fvy=amt*(((Math.pow(1+r2,m)-1)/r2)*(1+r2));labels.push(y+'y');invD.push(Math.round(amt*m));fvD.push(Math.round(fvy));}
+  if(sipChart) sipChart.destroy();
+  sipChart=new Chart(document.getElementById('sipChart'),{type:'bar',data:{labels,datasets:[{label:'Invested',data:invD,backgroundColor:'#bbf7d0',borderWidth:0},{label:'Value',data:fvD,backgroundColor:'#1D9E75',borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>{if(v>=10000000)return'₹'+(v/10000000).toFixed(0)+'Cr';if(v>=100000)return'₹'+(v/100000).toFixed(0)+'L';return'₹'+v.toLocaleString('en-IN');}}}}}});
+};
+
+function calcScore(){
+  const inc=getInc(),exp=getExp();
+  if(inc===0&&exp===0&&portfolio.length===0) return 0;
+  const savRate=inc>0?Math.min(1,(inc-exp)/inc):0;
+  const allExp=txns.filter(t=>t.type==='expense');
+  const impT=txns.filter(t=>t.mood==='impulsive'||t.mood==='regret');
+  return Math.round(savRate*35) + Math.round((allExp.length>0?1-impT.length/allExp.length:1)*25) + 20 + Math.min(20,portfolio.length*4+(portfolio.length>0?4:0));
+}
+
+function renderHealth(){
+  const inc=getInc(),exp=getExp(),sc=calcScore();
+  document.getElementById('sc-big').textContent=sc||'—';
+  const arc=document.getElementById('sc-arc');
+  arc.style.strokeDashoffset=239-(239*sc/100);
+  arc.style.stroke=sc>=70?'#1D9E75':sc>=50?'#f59e0b':'#ef4444';
+  const savRate=inc>0?Math.round(((inc-exp)/inc)*100):0;
+  document.getElementById('sb-sv').textContent=Math.max(0,savRate)+'%';
+  document.getElementById('sf-sv').style.width=Math.max(0,Math.min(100,savRate))+'%';
+  const allExp=txns.filter(t=>t.type==='expense'),impT=txns.filter(t=>t.mood==='impulsive'||t.mood==='regret');
+  const ic=allExp.length>0?Math.round((1-impT.length/allExp.length)*100):100;
+  document.getElementById('sb-ic').textContent=ic+'%';
+  document.getElementById('sf-ic').style.width=ic+'%';
+  const ia=Math.min(100,portfolio.length*20);
+  document.getElementById('sb-ia').textContent=ia+'%';
+  document.getElementById('sf-ia').style.width=ia+'%';
+  const insights=[];
+  if(txns.length===0&&portfolio.length===0){insights.push({t:'neutral',title:'Getting started',text:'Add transactions and portfolio holdings to unlock personalised insights.'});}
+  else{
+    const savRate2=inc>0?Math.round(((inc-exp)/inc)*100):0;
+    if(savRate2>=30) insights.push({t:'good',title:'Strong savings rate',text:`You save ${savRate2}% of your income — well above the recommended 20% minimum.`});
+    else if(savRate2<10&&inc>0) insights.push({t:'warn',title:'Low savings rate',text:`Only ${savRate2}% saved this month. Target at least 20%. Try cutting one non-essential category.`});
+    if(portfolio.length===0) insights.push({t:'info',title:'Start investing',text:'No investments yet. Even ₹500/month in a Nifty 50 Index Fund builds serious wealth over 10+ years.'});
+    else { const pl=getPortPL(); insights.push({t:pl>=0?'good':'warn',title:pl>=0?'Portfolio in profit':'Portfolio in loss',text:pl>=0?`Your portfolio is up ₹${Math.round(pl).toLocaleString('en-IN')}. Stay invested for compounding to work.`:`Down ₹${Math.round(Math.abs(pl)).toLocaleString('en-IN')}. Don't panic — keep your SIP running. Markets always recover long term.`}); }
+    if(impT.length>0) insights.push({t:'warn',title:'Impulse spending detected',text:`${impT.length} impulsive/regret purchases totalling ₹${impT.reduce((a,t)=>a+t.amt,0).toLocaleString('en-IN')}. Apply a 24-hour wait rule before non-essential purchases.`});
+    else if(allExp.length>2) insights.push({t:'good',title:'Excellent spending discipline',text:'All your recent expenses were planned or necessary. Great financial self-control!'});
+  }
+  document.getElementById('ins-grid').innerHTML=insights.map(i=>`<div class="ins ${i.t}"><div class="it">${i.title}</div>${i.text}</div>`).join('');
+}
+
+// ── REPORTS ─────────────────────────────────────────────────
+window.genPDF = () => {
+  const inc=getInc(),exp=getExp(),sav=inc-exp,sc=calcScore(),pl=getPortPL(),pv=getPortVal();
+  const today=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const catT={};txns.filter(t=>t.type==='expense').forEach(t=>{catT[t.cat]=(catT[t.cat]||0)+t.amt;});
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>FinAI Report</title>
+  <style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:32px;color:#111;font-size:13px;line-height:1.6}
+  h1{font-size:24px;font-weight:700;color:#1D9E75;margin-bottom:4px}
+  h2{font-size:14px;font-weight:700;margin:22px 0 10px;padding-bottom:5px;border-bottom:2px solid #1D9E75;color:#1D9E75;text-transform:uppercase;letter-spacing:0.05em}
+  .sub{color:#6b7280;font-size:12px;margin-bottom:28px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  .stat{background:#f9fafb;border-radius:8px;padding:14px;text-align:center;border:1px solid #e5e7eb}
+  .stat .v{font-size:22px;font-weight:700;color:#1D9E75}.stat.r .v{color:#ef4444}.stat .l{font-size:11px;color:#6b7280;margin-top:3px}
+  .score-box{background:#f0fdf4;border-radius:10px;padding:20px;text-align:center;margin-bottom:20px;border:1px solid #86efac}
+  .score-box .sv{font-size:48px;font-weight:700;color:#1D9E75}.score-box .sl{color:#166534;font-size:13px;margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px}th{background:#f9fafb;padding:8px 10px;text-align:left;font-size:12px;color:#374151;border-bottom:1px solid #e5e7eb}
+  td{padding:8px 10px;border-bottom:1px solid #f3f4f6;font-size:12px}
+  .g{color:#1D9E75;font-weight:700}.r{color:#ef4444;font-weight:700}
+  .footer{margin-top:32px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center}
+  @media print{body{padding:16px}}</style></head><body>
+  <h1>FinAI — Financial Report</h1>
+  <div class="sub">Generated on ${today} &nbsp;·&nbsp; Private &amp; confidential &nbsp;·&nbsp; For personal use only</div>
+  <h2>Financial summary</h2>
+  <div class="grid">
+    <div class="stat"><div class="v">₹${inc.toLocaleString('en-IN')}</div><div class="l">Total Income</div></div>
+    <div class="stat r"><div class="v">₹${exp.toLocaleString('en-IN')}</div><div class="l">Total Expenses</div></div>
+    <div class="stat ${sav<0?'r':''}"><div class="v">${sav<0?'-':''}₹${Math.abs(sav).toLocaleString('en-IN')}</div><div class="l">Net Savings</div></div>
+  </div>
+  <div class="score-box"><div class="sv">${sc}/100</div><div class="sl">Financial Health Score &nbsp;—&nbsp; ${sc>=70?'Great shape!':sc>=50?'Doing ok, keep improving':'Needs attention'}</div></div>
+  <h2>Spending by category</h2>
+  <table><thead><tr><th>Category</th><th>Amount spent</th><th>% of total expenses</th></tr></thead><tbody>
+  ${Object.entries(catT).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<tr><td>${CL[c]||c}</td><td>₹${v.toLocaleString('en-IN')}</td><td>${exp>0?((v/exp)*100).toFixed(1):0}%</td></tr>`).join('')}
+  </tbody></table>
+  ${portfolio.length>0?`<h2>Portfolio holdings</h2>
+  <div class="grid">
+    <div class="stat"><div class="v">₹${Math.round(pv).toLocaleString('en-IN')}</div><div class="l">Portfolio Value</div></div>
+    <div class="stat ${pl<0?'r':''}"><div class="v">${pl>=0?'+':'-'}₹${Math.round(Math.abs(pl)).toLocaleString('en-IN')}</div><div class="l">Unrealised P&L</div></div>
+    <div class="stat"><div class="v">${portfolio.length}</div><div class="l">Total Holdings</div></div>
+  </div>
+  <table><thead><tr><th>Name</th><th>Type</th><th>Qty</th><th>Buy price</th><th>Current price</th><th>Current value</th><th>Return</th></tr></thead><tbody>
+  ${portfolio.map(h=>{const val=h.qty*h.cur,pl2=val-h.qty*h.buy,pct=pl2/(h.qty*h.buy)*100;return`<tr><td>${h.name}</td><td>${h.type.toUpperCase()}</td><td>${h.qty}</td><td>₹${h.buy.toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>₹${h.cur.toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>₹${Math.round(val).toLocaleString('en-IN')}</td><td class="${pct>=0?'g':'r'}">${pct>=0?'+':''}${pct.toFixed(1)}%</td></tr>`}).join('')}
+  </tbody></table>`:''}
+  <h2>Recent transactions (last 20)</h2>
+  <table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Mood</th><th>Type</th><th>Amount</th></tr></thead><tbody>
+  ${txns.slice(0,20).map(t=>`<tr><td>${t.date}</td><td>${t.desc}</td><td>${CL[t.cat]||t.cat}</td><td>${t.mood||'—'}</td><td>${t.type}</td><td class="${t.type==='income'?'g':'r'}">${t.type==='income'?'+':'-'}₹${t.amt.toLocaleString('en-IN')}</td></tr>`).join('')}
+  </tbody></table>
+  <div class="footer">FinAI Personal Finance OS &nbsp;·&nbsp; All data is stored privately &nbsp;·&nbsp; This report does not constitute financial advice</div>
+  <script>window.onload=()=>setTimeout(()=>window.print(),500)<\/script>
+  </body></html>`);
+  w.document.close();
+};
+
+window.exportJSON = () => {
+  const data={txns,portfolio,budgets,curRisk,exportedAt:new Date().toISOString(),version:'finai-v4'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`finai-backup-${new Date().toLocaleDateString('en-IN').replace(/\//g,'-')}.json`;
+  a.click();
+};
+
+window.importJSON = event => {
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.version||!data.version.startsWith('finai')){alert('Invalid FinAI backup file.');return;}
+      if(!confirm(`Import ${data.txns?.length||0} transactions and ${data.portfolio?.length||0} holdings?\nThis will merge with your current data.`)) return;
+      const existIds=new Set(txns.map(t=>t.id));
+      txns=[...(data.txns||[]).filter(t=>!existIds.has(t.id)),...txns];
+      const existPortIds=new Set(portfolio.map(h=>h.id));
+      portfolio=[...portfolio,...(data.portfolio||[]).filter(h=>!existPortIds.has(h.id))];
+      save(); renderAll();
+      alert('Import successful!');
+    }catch(err){alert('Failed to read backup file.');}
+  };
+  reader.readAsText(file);
+  event.target.value='';
+};
+
+// ── AI ADVISOR ───────────────────────────────────────────────
+window.ask = async q => {
+  const inp=document.getElementById('ai-inp');
+  const question=q||inp.value.trim();
+  if(!question) return;
+  inp.value='';
+  aMsg(question,'user');
+  const ck=question.toLowerCase().trim().substring(0,80);
+  if(aiCache[ck]){aMsg(aiCache[ck],'ai');setCN('Answered from cache — zero API credits used.',4000);return;}
+  setCN('');
+  const loading=aMsg('Thinking...','ai loading');
+  const inc=getInc(),exp=getExp(),sav=inc-exp;
+  const cs={};txns.filter(t=>t.type==='expense').forEach(t=>{cs[t.cat]=(cs[t.cat]||0)+t.amt;});
+  const sys=`You are FinAI, a personal finance and investment advisor for an Indian user. Be concise (4-5 sentences), use ₹, give specific actionable India-focused advice. Note this is educational, not SEBI-registered advice.
+User data — Income: ₹${inc} | Expenses: ₹${exp} | Savings: ₹${sav} | Risk profile: ${curRisk} | Health score: ${calcScore()}/100
+Spending: ${Object.entries(cs).map(([k,v])=>`${CL[k]}:₹${v}`).join(', ')||'none yet'}
+Portfolio: ${portfolio.map(h=>`${h.name}(${h.type}, cur:₹${h.cur}, return:${(((h.cur-h.buy)/h.buy)*100).toFixed(1)}%)`).join('; ')||'no holdings yet'}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:question}]})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Could not get a response. Please try again.';
+    loading.className='msg ai'; loading.textContent=reply;
+    aiCache[ck]=reply;
+    if(Object.keys(aiCache).length>60) delete aiCache[Object.keys(aiCache)[0]];
+    save(); setCN('Response cached — this question will never use credits again.',5000);
+  }catch(e){ loading.className='msg ai'; loading.textContent='Connection error. Please check your internet and try again.'; }
+  document.getElementById('ai-msgs').scrollTop=99999;
+};
+
+function aMsg(t,r){const msgs=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='msg '+r;d.textContent=t;msgs.appendChild(d);msgs.scrollTop=99999;return d;}
+function setCN(t,ms){document.getElementById('cache-note').textContent=t;if(ms)setTimeout(()=>document.getElementById('cache-note').textContent='',ms);}
+
+window.renderInvest=renderInvest;
+window.renderPortfolio=renderPortfolio;
+window.renderHealth=renderHealth;
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</body>
+</html>
