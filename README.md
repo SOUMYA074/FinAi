@@ -4,7 +4,7 @@ A privacy-first, AI-powered personal finance application that helps you
 track expenses, plan investments, and build long-term wealth.
 
 ## Live Demo
-🔗 https://yourusername.github.io/finai
+🔗 https://soumya074.github.io/FinAi/
 
 ## Features
 
@@ -34,7 +34,7 @@ track expenses, plan investments, and build long-term wealth.
 
 1. Clone the repository
 ```bash
-   git clone https://github.com/yourusername/finai.git
+   git clone https://github.com/soumya074/finai.git
    cd finai
 ```
 
@@ -79,7 +79,7 @@ finai/
 
 **Your Name**  
 BCA Graduate  
-📧 your@email.com  
+📧 sahoosoumyaranjan074@email.com  
 🔗 linkedin.com/in/yourprofile
 
 ## Disclaimer
