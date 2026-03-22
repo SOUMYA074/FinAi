@@ -1,0 +1,10 @@
+name = "finai-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "FINAI_KV"
+id = "6090b8b49a1545f2b1b1332cdc0aaee0"
+
+# GROQ_API_KEY is set as a secret, never stored in this file:
+# run: wrangler secret put GROQ_API_KEY
