@@ -15,10 +15,38 @@ Track expenses, analyze behavior, plan investments, and get intelligent financia
 Just open it → it works.
 
 It combines:
-- 📊 Expense tracking  
-- 📈 Portfolio management  
-- 🧠 AI-powered financial insights  
+- 📊 Expense tracking with smart auto-categorisation  
+- 📈 Portfolio management & investment planning  
+- 🧠 AI-powered financial insights (7 providers)  
+- 📩 Bank SMS parsing — auto-detect transactions  
+- 💰 Daily spending allowance & budget tracking  
+- 📅 Bill reminders with due date alerts  
 - 🔒 Privacy-first local + optional cloud sync  
+
+---
+
+## ✨ What's New (v5)
+
+### 🐛 Critical Bug Fixes
+| Bug | Fix |
+|-----|-----|
+| Salary doubling across months (₹8K+₹8K=₹16K) | Added month-based filtering to `getInc()`/`getExp()` |
+| AI giving stale cached answers | Cache keys now include data fingerprint |
+| Heatmap stuck on current month | Added ◀/▶ month navigation |
+
+### 🚀 10 New Features
+| # | Feature | What It Does |
+|---|---------|-------------|
+| 📩 | **Bank SMS Parser** | Paste UPI/bank SMS → auto-extract amount, merchant & category |
+| 💰 | **Daily Allowance** | Shows how much you can safely spend today |
+| 📊 | **Budget Tracker** | Set monthly limits per category with progress bars |
+| 📅 | **Bill Reminders** | Track recurring bills with due date alerts + one-click pay |
+| 🤖 | **Auto-Categorisation** | 150+ Indian brand keywords auto-select categories |
+| 📅 | **Date Picker** | Backdate forgotten expenses to any past date |
+| 🔥 | **Streak Tracker** | Gamification — track consecutive logging days |
+| ⚡ | **Quick Add** | One-tap buttons for your most frequent expenses |
+| 📈 | **Spending Trend** | 6-month income vs expenses line chart |
+| 📧 | **Email Report** | Monthly summary sent to your email client |
 
 ---
 
@@ -27,24 +55,106 @@ It combines:
 ### 📊 Smart Financial Dashboard
 - Income, expenses, savings, and portfolio overview
 - Financial Health Score (0–100)
-- Spending heatmap (GitHub-style calendar)
+- **Daily spending allowance** — "₹571 you can spend today"
+- **Budget progress bars** per category with alerts
+- **Streak tracker** with emoji progression (🌱→💪→⭐→🔥→🌟)
+- **Quick-add buttons** for frequent expenses
+- Spending heatmap (GitHub-style calendar) with month navigation
 - Salary-cycle based progress tracking
 - AI-generated financial personality
 
 ---
 
+### 📩 Bank SMS Transaction Parser
+Paste any bank/UPI notification → FinAI auto-extracts:
+- **Amount** — supports INR, Rs., ₹ formats
+- **Merchant** — extracts from "at", "to", "UPI-" patterns
+- **Category** — auto-matched using 150+ keyword database
+- **Credit/Debit** — detects refunds, cashbacks, deposits
+
+Supports SMS formats from: **SBI, HDFC, ICICI, Axis, Kotak, Paytm, PhonePe, GPay**
+
+```
+Example: "Rs.350 debited from A/c XX1234 for UPI-ZOMATO"
+→ Amount: ₹350 | Merchant: ZOMATO | Category: Food & Dining
+```
+
+---
+
+### 🤖 Smart Auto-Categorisation
+
+**150+ Indian brand keywords** covering 8 categories:
+
+| Category | Sample Keywords |
+|----------|---------------|
+| 🍕 Food & Dining | Zomato, Swiggy, Dominos, BigBasket, Blinkit, Zepto, Starbucks |
+| 🚗 Transport | Uber, Ola, Rapido, Metro, Petrol, IRCTC, MakeMyTrip |
+| 🛍️ Shopping | Amazon, Flipkart, Myntra, Ajio, Meesho, Nykaa, Croma |
+| 🏥 Health | Apollo, 1mg, Netmeds, Practo, Gym, Cult, Yoga |
+| 🎬 Entertainment | Netflix, Hotstar, Spotify, PVR, INOX, Steam, YouTube Premium |
+| 💡 Bills | Jio, Airtel, Vi, Rent, EMI, Electricity, LPG, Recharge |
+| 📚 Education | Udemy, Coursera, Unacademy, BYJU's, Upgrad, Skillshare |
+| 💹 Investment | Zerodha, Groww, Upstox, SIP, Mutual Fund, PPF, NPS |
+
+Type a keyword → category auto-selects with ✨ **Auto-detected** badge.
+
+---
+
+### 💰 Daily Spending Allowance
+
+Shows exactly how much you can **safely spend today**:
+
+```
+Daily Allowance = (Income - Expenses - 20% Savings Target) ÷ Days Remaining
+```
+
+Color-coded:
+- 💰 Green (>₹500) — spending comfortably
+- 🟢 Normal (₹200-500)
+- 🟡 Caution (<₹200)
+- 🔴 Over budget
+
+---
+
+### 📊 Budget Tracker
+
+Set monthly limits per category → visual progress bars:
+
+- 🟢 **On track** — under 75% of limit
+- 🟠 **Almost there** — 75-99%
+- 🔴 **Over budget!** — exceeded limit
+
+Click ✏️ to set budgets for Food, Transport, Shopping, etc.
+
+---
+
+### 📅 Bill Reminders
+
+Track recurring monthly bills with smart due-date indicators:
+
+- 🔴 **Today!** — bill is due today
+- 🟠 **Tomorrow** / **In 3 days** — coming up soon
+- 🟢 **Day 15** — well ahead
+
+Features:
+- **One-click "Pay"** — auto-logs the expense
+- **Smart icons** — 🏠 Rent, 🎬 Netflix, ⚡ Electricity, 📱 Jio, 🏋️ Gym
+- **Sorted by urgency** — nearest due date first
+
+---
+
 ### 💸 Expense Tracking with Behavior Insights
 - Add income/expenses with categories
-- Mood tagging:
-  - Planned / Impulsive / Necessary / Regret / Happy
-- Full transaction history
+- **Date picker** — backdate forgotten expenses
+- Mood tagging: Planned / Impulsive / Necessary / Regret / Happy
+- **Month-separated** transaction list (This Month + Older)
 - AI analysis of spending habits
+- **6-month spending trend chart** (Income vs Expenses)
 
 ---
 
 ### 📈 Portfolio Tracker
-- Track:
-  - Stocks, Mutual Funds, ETFs, SIPs, Bonds, Gold
+- Track: Stocks, Mutual Funds, ETFs, SIPs, Bonds, Gold
 - Real-time profit/loss tracking
 - Price history visualization (Chart.js)
 - Manual price update system
@@ -52,8 +162,7 @@ It combines:
 ---
 
 ### 🧭 Investment Planning
-- Risk profiles:
-  - Conservative / Moderate / Aggressive / Ultra
+- Risk profiles: Conservative / Moderate / Aggressive / Ultra
 - Asset allocation suggestions
 - AI-generated investment strategies
 - Personalized fund recommendations
@@ -70,17 +179,29 @@ It combines:
 ### 🧠 AI Financial Advisor
 - Chat-based assistant using your real data
 - Context-aware responses (salary-cycle aware)
-- Smart caching (same question = free reuse)
+- **Data-fingerprinted caching** — same data = cached, new data = fresh answer
+- Tab-specific AI tips (Dashboard, Expenses, Invest, SIP)
+
+---
+
+### 📧 Email Monthly Report
+
+One-click email report including:
+- Monthly income, expenses, savings, savings rate
+- Top spending categories
+- Health Score
+- Impulse spending alerts
+- Portfolio P&L summary
 
 ---
 
 ### 📊 Financial Health Score
 
 Score (0–100) based on:
-- Savings rate
-- Impulse control
-- Investment activity
-- Base consistency
+- Savings rate → max 35  
+- Impulse control → max 25  
+- Base score → 20  
+- Investment activity → max 20  
 
 ---
 
@@ -241,8 +362,11 @@ npx serve .
 |------|--------|
 | Transactions | Firestore + localStorage |
 | Portfolio | Firestore + localStorage |
+| Budgets | Firestore + localStorage |
 | AI Cache | Firestore + localStorage |
 | AI Keys | Firestore + localStorage |
+| Bill Reminders | localStorage |
+| Best Streak | localStorage |
 | Theme | localStorage |
 | Risk Profile | Firestore + localStorage |
 
@@ -263,27 +387,34 @@ npx serve .
 - GitHub Models has daily limits  
 - Ollama requires local setup  
 - Firestore rules are in test mode  
+- SMS parser works best with English-language bank SMS  
 
 ---
 
 ## 🛠 Tech Stack
 
 - **Frontend:** Vanilla JavaScript  
-- **UI:** HTML5, CSS3  
+- **UI:** HTML5, CSS3 (Glassmorphism + Dark/Light themes)  
 - **Charts:** Chart.js  
 - **Auth & DB:** Firebase  
-- **AI:** Multi-provider architecture  
+- **AI:** Multi-provider architecture (7 providers)  
+- **Worker:** Cloudflare Workers + KV  
 - **Hosting:** GitHub Pages  
 
 ---
 
 ## 🎯 What Makes FinAI Unique
 
-- 🧩 Single-file architecture  
-- 🧠 AI aware of salary cycle  
-- 📊 Behavioral finance tracking  
-- 🔒 Privacy-first design  
-- ☁️ Cloudflare Worker optimization  
+- 🧩 **Single-file architecture** — no frameworks, no build tools
+- 📩 **Bank SMS parser** — paste notification → auto-log expense
+- 💰 **Daily allowance** — "you can spend ₹X today"
+- 📊 **Budget tracking** — per-category limits with progress bars
+- 📅 **Bill reminders** — never miss rent or EMI again
+- 🤖 **150+ keyword auto-categorisation** — Paytm-level smart detection
+- 🔥 **Streak gamification** — build a daily logging habit
+- 🧠 **AI with data fingerprint** — always fresh, never stale
+- 📊 **Behavioral finance** — mood tracking on every expense
+- 🔒 **Privacy-first** — works fully offline, your data stays yours
 
 ---
 

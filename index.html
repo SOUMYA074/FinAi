@@ -263,6 +263,58 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
 .month-progress-bar{flex:1;height:4px;background:var(--bg4);border-radius:4px;overflow:hidden}
 .month-progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--orange));border-radius:4px;transition:width .5s}
 .projected-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--amber-dim);color:var(--amber);font-weight:600;white-space:nowrap}
+.auto-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--green-dim);color:var(--green);font-weight:600;display:none;animation:msgPop 0.3s ease}
+.streak-card{background:linear-gradient(135deg,var(--orange-dim),var(--amber-dim));border:1px solid var(--orange-glow);border-radius:22px;padding:16px 20px;margin-bottom:1.5rem;display:flex;align-items:center;gap:16px;transition:var(--tr)}
+.streak-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.streak-fire{font-size:32px;flex-shrink:0}
+.streak-num{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--orange);line-height:1}
+.streak-label{font-size:12px;color:var(--text2);margin-top:2px}
+.streak-best{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.quick-add-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.qa-btn{padding:8px 16px;border:1px solid var(--border);border-radius:40px;font-size:12px;cursor:pointer;background:var(--bg3);color:var(--text2);transition:var(--tr);font-family:var(--font);font-weight:500;backdrop-filter:var(--blur);display:flex;align-items:center;gap:6px}
+.qa-btn:hover{border-color:var(--green);color:var(--text);transform:translateY(-2px);box-shadow:0 4px 12px -2px var(--green-glow)}
+.qa-btn .qa-cat{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* SMS Parser */
+.sms-card{background:linear-gradient(135deg,var(--blue-dim),var(--purple-dim));border:1px solid rgba(92,168,255,0.2);border-radius:22px;padding:18px 20px;margin-bottom:1rem}
+.sms-textarea{width:100%;min-height:70px;max-height:150px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:12px;color:var(--text);font-family:var(--mono);font-size:12px;resize:vertical;line-height:1.5;transition:var(--tr)}
+.sms-textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px var(--blue-dim)}
+.sms-textarea::placeholder{color:var(--text3);font-family:var(--font);font-size:12px}
+.sms-result{margin-top:10px;padding:10px 14px;background:var(--bg3);border-radius:14px;border:1px solid var(--border);display:none;animation:slideUp 0.3s ease}
+.sms-result .sms-field{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.sms-result .sms-val{font-weight:600;color:var(--green);font-family:var(--mono)}
+/* Budget Progress */
+.budget-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.budget-item{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 14px;transition:var(--tr)}
+.budget-item:hover{border-color:var(--border2)}
+.budget-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.budget-cat{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.budget-cat .bdot{width:8px;height:8px;border-radius:50%}
+.budget-amt{font-size:11px;font-family:var(--mono);color:var(--text2)}
+.budget-bar{height:6px;background:var(--bg4);border-radius:6px;overflow:hidden}
+.budget-fill{height:100%;border-radius:6px;transition:width 0.5s ease}
+.budget-status{font-size:10px;margin-top:5px;font-weight:600}
+/* Daily Allowance */
+.allowance-card{background:linear-gradient(135deg,var(--green-dim),rgba(0,229,160,0.04));border:1px solid var(--green-glow);border-radius:22px;padding:18px 22px;margin-bottom:1.5rem;text-align:center;transition:var(--tr)}
+.allowance-card:hover{transform:translateY(-2px);box-shadow:0 10px 30px -8px var(--green-glow)}
+.allowance-emoji{font-size:28px;margin-bottom:4px}
+.allowance-amt{font-size:32px;font-weight:700;font-family:var(--mono);color:var(--green);line-height:1.2}
+.allowance-label{font-size:11px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:0.08em}
+.allowance-sub{font-size:11px;color:var(--text3);margin-top:6px}
+/* Bill Reminders */
+.bill-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;margin-bottom:8px;transition:var(--tr)}
+.bill-item:hover{border-color:var(--border2)}
+.bill-icon{font-size:20px;flex-shrink:0;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--bg4)}
+.bill-info{flex:1;min-width:0}
+.bill-name{font-size:13px;font-weight:600}
+.bill-meta{font-size:11px;color:var(--text3)}
+.bill-right{text-align:right}
+.bill-amt{font-size:13px;font-weight:600;font-family:var(--mono)}
+.bill-due{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.bill-due.soon{background:var(--orange-dim);color:var(--orange)}
+.bill-due.overdue{background:var(--red-dim);color:var(--red)}
+.bill-due.ok{background:var(--green-dim);color:var(--green)}
+.bill-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px}
+@media(max-width:600px){.bill-form{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body class="dark">
@@ -316,6 +368,27 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
       <div class="met av"><div class="lbl">Investable surplus</div><div class="val" id="m-inv">&#8377;0</div><div class="sub">20% of savings</div></div>
       <div class="met" id="m-pl-c"><div class="lbl">Total P&amp;L</div><div class="val" id="m-pl">&#8377;0</div><div class="sub">unrealised</div></div>
     </div>
+    <div id="streak-card" class="streak-card" style="display:none">
+      <div class="streak-fire" id="streak-emoji">🔥</div>
+      <div style="flex:1">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label" id="streak-label">day streak</div>
+      </div>
+      <div style="text-align:right">
+        <div class="streak-best" id="streak-best">Best: 0</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">Log daily to build your streak!</div>
+      </div>
+    </div>
+    <div id="allowance-card" class="allowance-card" style="display:none">
+      <div class="allowance-emoji" id="allowance-emoji">💰</div>
+      <div class="allowance-amt" id="allowance-amt">₹0</div>
+      <div class="allowance-label">you can spend today</div>
+      <div class="allowance-sub" id="allowance-sub"></div>
+    </div>
+    <div id="quick-add-section" style="display:none">
+      <div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">⚡ Quick add</div>
+      <div class="quick-add-wrap" id="quick-add-wrap"></div>
+    </div>
     <div class="month-progress" id="month-progress-bar">
       <span id="month-progress-label">Loading...</span>
       <div class="month-progress-bar"><div class="month-progress-fill" id="month-progress-fill" style="width:0%"></div></div>
@@ -331,7 +404,12 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
     </div>
     <div class="card" id="heatmap-card">
       <div class="card-title">Spending calendar</div>
-      <div style="display:flex;gap:4px;margin-bottom:6px" id="heatmap-months"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px" id="heatmap-months">
+        <button class="btn sm" onclick="changeHeatmapMonth(-1)" style="padding:0 10px;min-width:32px">&#9664;</button>
+        <span id="heatmap-label" style="font-size:12px;color:var(--text2);font-weight:500;flex:1;text-align:center"></span>
+        <span id="heatmap-total" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+        <button class="btn sm" onclick="changeHeatmapMonth(1)" id="heatmap-next-btn" style="padding:0 10px;min-width:32px">&#9654;</button>
+      </div>
       <div class="heatmap-grid" id="heatmap-grid"></div>
       <div class="hm-legend">
         <span>Less</span>
@@ -347,24 +425,65 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
     </div>
         <div class="ai-tip-card" id="ai-tip-dashboard"><div class="ai-tip-icon">&#129302;</div><div class="ai-tip-body"><div class="ai-tip-label">AI Insight</div><div class="ai-tip-text loading" id="ai-tip-dashboard-text">Enable AI in &#9881; AI Key tab to get personalised insights.</div><button class="ai-tip-refresh" onclick="fetchTabAI('dashboard',true)" id="ai-tip-dashboard-btn" style="display:none">&#8635; Refresh</button></div></div>
     <div class="card"><div class="card-title">Spending breakdown</div><div class="cw"><canvas id="catChart"></canvas></div></div>
+    <div class="card" id="budget-card" style="display:none">
+      <div class="card-title">Budget tracker <button class="btn sm" onclick="toggleBudgetEdit()" style="float:right;font-size:10px" id="budget-edit-btn">✏️ Set budgets</button></div>
+      <div id="budget-edit" style="display:none;margin-bottom:14px">
+        <div class="budget-grid" id="budget-set-grid"></div>
+      </div>
+      <div class="budget-grid" id="budget-progress-grid"></div>
+    </div>
     <div class="card"><div class="card-title">Recent transactions</div><div id="recent-list" class="tlist"></div></div>
   </div>
   <div id="tab-expenses" class="sec">
+    <div class="sms-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:20px">📩</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--blue)">Paste bank SMS</div>
+          <div style="font-size:11px;color:var(--text3)">Auto-detect amount, merchant & category from UPI/bank notifications</div>
+        </div>
+      </div>
+      <textarea class="sms-textarea" id="sms-input" placeholder="Paste your bank SMS here...
+Example: Rs.350 debited from A/c XX1234 for UPI-ZOMATO
+or: INR 500.00 spent at AMAZON via HDFC Card" oninput="parseSMS()"></textarea>
+      <div class="sms-result" id="sms-result">
+        <div class="sms-field"><span>Amount</span><span class="sms-val" id="sms-amt"></span></div>
+        <div class="sms-field"><span>Merchant</span><span class="sms-val" id="sms-merchant"></span></div>
+        <div class="sms-field"><span>Category</span><span class="sms-val" id="sms-cat"></span></div>
+        <button class="btn pri sm" onclick="addFromSMS()" style="width:100%;margin-top:8px">⚡ Add this transaction</button>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">Add transaction</div>
       <div class="row" style="margin-bottom:10px">
-        <div class="fld" style="flex:2;min-width:140px"><label>Description</label><input id="e-desc" placeholder="e.g. Zomato order, Salary credited..."/></div>
+        <div class="fld" style="flex:2;min-width:140px"><label>Description</label><input id="e-desc" placeholder="e.g. Zomato order, Salary credited..." oninput="autoDetectCategory()"/></div>
         <div class="fld"><label>Amount (&#8377;)</label><input type="number" id="e-amt" placeholder="0" min="0"/></div>
         <div class="fld"><label>Type</label><select id="e-type"><option value="expense">Expense</option><option value="income">Income</option></select></div>
       </div>
-      <div class="row">
-        <div class="fld"><label>Category</label><select id="e-cat"><option value="food">Food &amp; Dining</option><option value="transport">Transport</option><option value="shopping">Shopping</option><option value="health">Health</option><option value="entertainment">Entertainment</option><option value="bills">Bills &amp; Utilities</option><option value="education">Education</option><option value="investment">Investment</option><option value="other">Other</option></select></div>
+      <div class="row" style="margin-bottom:10px">
+        <div class="fld"><label>Date</label><input type="date" id="e-date" style="font-family:var(--font)"/></div>
+        <div class="fld"><label>Category <span class="auto-badge" id="auto-badge">✨ Auto-detected</span></label><select id="e-cat"><option value="food">Food &amp; Dining</option><option value="transport">Transport</option><option value="shopping">Shopping</option><option value="health">Health</option><option value="entertainment">Entertainment</option><option value="bills">Bills &amp; Utilities</option><option value="education">Education</option><option value="investment">Investment</option><option value="other">Other</option></select></div>
+      </div>
         <div class="fld"><label>How did you feel?</label><div class="mood-btns"><button class="mb ms" data-m="planned" onclick="sm(this)">Planned</button><button class="mb" data-m="impulsive" onclick="sm(this)">Impulsive</button><button class="mb" data-m="necessary" onclick="sm(this)">Necessary</button><button class="mb" data-m="regret" onclick="sm(this)">Regret</button><button class="mb" data-m="happy" onclick="sm(this)">Happy</button></div></div>
         <button class="btn pri" onclick="addT()" style="align-self:end;flex-shrink:0">+ Add</button>
       </div>
     </div>
     <div class="ai-tip-card" id="ai-tip-expenses"><div class="ai-tip-icon">&#128161;</div><div class="ai-tip-body"><div class="ai-tip-label">Spending Analysis</div><div class="ai-tip-text loading" id="ai-tip-expenses-text">Enable AI in &#9881; AI Key tab to get spending insights.</div><button class="ai-tip-refresh" onclick="fetchTabAI('expenses',true)" id="ai-tip-expenses-btn" style="display:none">&#8635; Refresh</button></div></div>
     <div class="card"><div class="card-title">All transactions</div><div id="all-list" class="tlist"></div></div>
+    <div class="card" id="trend-card">
+      <div class="card-title">Monthly spending trend</div>
+      <div class="cw"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="card" id="bills-card">
+      <div class="card-title">📅 Bill reminders</div>
+      <div class="bill-form" id="bill-form">
+        <div class="fld"><label>Bill name</label><input id="bill-name" placeholder="e.g. Rent, Netflix"/></div>
+        <div class="fld"><label>Amount (₹)</label><input type="number" id="bill-amt" placeholder="0" min="0"/></div>
+        <div class="fld"><label>Due date (day of month)</label><input type="number" id="bill-day" placeholder="1-31" min="1" max="31"/></div>
+        <button class="btn pri sm" onclick="addBill()" style="height:40px">+ Add</button>
+      </div>
+      <div id="bills-list"></div>
+    </div>
   </div>
   <div id="tab-portfolio" class="sec">
     <div class="card">
@@ -422,6 +541,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
       <div class="card-title">Export &amp; reports</div>
       <div class="report-btns">
         <button class="btn pri" onclick="genPDF()">Download PDF report</button>
+        <button class="btn" style="background:linear-gradient(135deg,var(--orange-dim),var(--amber-dim));color:var(--orange);border-color:var(--orange-glow);font-weight:600" onclick="emailReport()">&#128231; Email Monthly Report</button>
         <button class="btn blue" onclick="exportJSON()">Export JSON backup</button>
         <button class="btn" onclick="document.getElementById('import-file').click()">Import JSON backup</button>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)"/>
@@ -587,7 +707,34 @@ const CL={food:'Food & Dining',transport:'Transport',shopping:'Shopping',health:
 const TC={stock:'#4d9fff',mf:'#00d48a',etf:'#a78bfa',sip:'#00a86b',bond:'#64748b',gold:'#ffb547'};
 const MC={planned:'#00d48a',necessary:'#4d9fff',happy:'#34d399',impulsive:'#ffb547',regret:'#ff5e7d'};
 let txns=[],portfolio=[],budgets={},aiCache={},curRisk='moderate',selMood='planned';
-let catChart=null,portChart=null,sipChart=null,priceCharts={};
+let catChart=null,portChart=null,sipChart=null,priceCharts={},trendChart=null;
+let heatmapYear=new Date().getFullYear(),heatmapMonth=new Date().getMonth();
+/* ── AUTO-CATEGORISATION KEYWORD MAP ── */
+const AUTO_CAT={
+  food:['zomato','swiggy','dominos','pizza','mcdonalds','kfc','burger','restaurant','lunch','dinner','breakfast','chai','coffee','starbucks','biryani','maggi','mess','canteen','bakery','ice cream','subway','dunkin','barbeque','haldiram','bhujia','groceries','grocery','bigbasket','blinkit','zepto','instamart','dmart','milk','vegetables','fruits','snacks','tiffin','thali'],
+  transport:['uber','ola','rapido','metro','bus','petrol','diesel','fuel','parking','toll','train','irctc','redbus','flight','indigo','spicejet','vistara','cab','auto','rickshaw','bike','cycle','makemytrip','goibibo','cleartrip','yatra'],
+  shopping:['amazon','flipkart','myntra','ajio','meesho','nykaa','mall','shoes','clothes','watch','phone','laptop','headphones','earbuds','tatacliq','snapdeal','croma','reliance digital','electronics','furniture','ikea','pepperfry','gift'],
+  health:['pharmacy','apollo','medplus','gym','doctor','hospital','medicine','1mg','netmeds','practo','physiotherapy','dental','eye','clinic','lab','test','blood','scan','xray','insurance premium','star health','max bupa','cult','yoga'],
+  entertainment:['netflix','hotstar','prime video','spotify','youtube premium','movie','pvr','inox','cinepolis','gaming','steam','playstation','xbox','concert','book','kindle','audible','jiocinema','zee5','sonyliv','voot'],
+  bills:['electricity','water','wifi','jio','airtel','vi','vodafone','broadband','rent','emi','insurance','postpaid','prepaid','gas','cylinder','lpg','dth','tata sky','maintenance','society','housekeeper','maid','laundry','ironing','recharge','act fibernet'],
+  education:['udemy','coursera','books','college','school','tuition','exam','library','coaching','unacademy','byjus','upgrad','skillshare','pluralsight','linkedin learning','fees','stationery','notebook','pen'],
+  investment:['zerodha','groww','upstox','sip','mutual fund','fd','ppf','nps','stocks','share','demat','coin','smallcase','kuvera','et money','paytm money','angel one','ipo','bond','gold','sgb']
+};
+window.autoDetectCategory=function(){
+  var desc=(document.getElementById('e-desc').value||'').toLowerCase();
+  var badge=document.getElementById('auto-badge');
+  if(desc.length<2){if(badge)badge.style.display='none';return;}
+  for(var cat in AUTO_CAT){
+    for(var i=0;i<AUTO_CAT[cat].length;i++){
+      if(desc.indexOf(AUTO_CAT[cat][i])!==-1){
+        document.getElementById('e-cat').value=cat;
+        if(badge)badge.style.display='inline';
+        return;
+      }
+    }
+  }
+  if(badge)badge.style.display='none';
+};
 function loadLocal(){txns=JSON.parse(localStorage.getItem('finai_txns')||'[]');portfolio=JSON.parse(localStorage.getItem('finai_port')||'[]');budgets=JSON.parse(localStorage.getItem('finai_budgets')||'{}');aiCache=JSON.parse(localStorage.getItem('finai_cache')||'{}');curRisk=localStorage.getItem('finai_risk')||'moderate';}
 async function loadFS(uid){try{const snap=await getDoc(doc(db,'users',uid));if(snap.exists()){const d=snap.data();txns=d.txns||[];portfolio=d.portfolio||[];budgets=d.budgets||{};aiCache=d.aiCache||{};curRisk=d.curRisk||'moderate';if(d.aiSettings){const s=d.aiSettings;if(s.provider)localStorage.setItem('finai_ai_provider',s.provider);if(s.enabled)localStorage.setItem('finai_ai_enabled',s.enabled);if(s.keys){Object.entries(s.keys).forEach(function(kv){if(kv[1])localStorage.setItem('finai_ai_key_'+kv[0],kv[1]);});}}}else loadLocal();}catch(e){loadLocal();}}
 function listenFS(uid){if(firestoreUnsub)firestoreUnsub();firestoreUnsub=onSnapshot(doc(db,'users',uid),function(snap){if(snap.exists()&&!snap.metadata.hasPendingWrites){const d=snap.data();txns=d.txns||[];portfolio=d.portfolio||[];budgets=d.budgets||{};curRisk=d.curRisk||'moderate';renderAll();setSyncDot('synced');}});}
@@ -601,31 +748,262 @@ async function saveFS(){if(!isOnline||!currentUser)return;setSyncDot('syncing');
 function save(){saveLocal();saveFS();uploadContextToWorker(currentUser?currentUser.uid:'offline');}
 function setSyncDot(s){const d=document.getElementById('sync-dot');if(d){d.className='sync-dot'+(s==='synced'?' synced':s==='syncing'?' syncing':'');if(s==='error')d.style.background='var(--red)';}const sd=document.getElementById('sync-status-detail');if(sd){if(!isOnline){sd.innerHTML='<span style="color:var(--amber)">Offline mode.</span>';return;}if(!IS_CFG){sd.innerHTML='<span style="color:var(--red)">Firebase not configured.</span>';return;}if(s==='synced')sd.innerHTML='<span style="color:var(--green)">Synced</span> as <strong>'+(currentUser&&(currentUser.displayName||currentUser.email))+'</strong>';else if(s==='syncing')sd.innerHTML='<span style="color:var(--amber)">Saving\u2026</span>';else sd.innerHTML='<span style="color:var(--red)">Sync failed.</span>';}}
 window.sm=function(el){document.querySelectorAll('.mb').forEach(function(b){b.classList.remove('ms');});el.classList.add('ms');selMood=el.dataset.m;};
-window.sw=function(tab,el){document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.getElementById('tab-'+tab).classList.add('active');if(el)el.classList.add('active');if(tab==='invest')renderInvest();if(tab==='portfolio')renderPortfolio();if(tab==='sip')calcSIP();if(tab==='health')renderHealth();if(tab==='reports')setSyncDot(isOnline?'synced':'offline');if(tab==='aikey')loadAISettings();if(tab==='dashboard'||tab==='expenses'||tab==='invest'||tab==='sip')fetchTabAI(tab);};
+window.sw=function(tab,el){document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.getElementById('tab-'+tab).classList.add('active');if(el)el.classList.add('active');if(tab==='invest')renderInvest();if(tab==='portfolio')renderPortfolio();if(tab==='sip')calcSIP();if(tab==='health')renderHealth();if(tab==='reports')setSyncDot(isOnline?'synced':'offline');if(tab==='aikey')loadAISettings();if(tab==='dashboard'||tab==='expenses'||tab==='invest'||tab==='sip')fetchTabAI(tab);if(tab==='expenses'){var di=document.getElementById('e-date');if(di&&!di.value)di.value=new Date().toISOString().split('T')[0];renderTrend();}};
 function cc(){const d=curTheme()==='dark';return{tick:d?'rgba(143,163,191,0.8)':'rgba(74,96,128,0.9)',grid:d?'rgba(255,255,255,0.04)':'rgba(20,40,100,0.05)'}}
 const fmt=function(n){if(n>=10000000)return'\u20b9'+(n/10000000).toFixed(2)+'Cr';if(n>=100000)return'\u20b9'+(n/100000).toFixed(1)+'L';return'\u20b9'+Math.round(n).toLocaleString('en-IN');};
-function getInc(){return txns.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amt;},0);}
-function getExp(){return txns.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amt;},0);}
+function parseTxnMonth(t){var p=t.date.split('/');return{m:parseInt(p[1])-1,y:parseInt(p[2])||new Date().getFullYear()};}
+function isInMonth(t,y,m){var d=parseTxnMonth(t);return d.y===y&&d.m===m;}
+function getCurMonthTxns(){var n=new Date();return txns.filter(function(t){return isInMonth(t,n.getFullYear(),n.getMonth());});}
+function getInc(y,m){if(y===undefined){var n=new Date();y=n.getFullYear();m=n.getMonth();}return txns.filter(function(t){return t.type==='income'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+t.amt;},0);}
+function getExp(y,m){if(y===undefined){var n=new Date();y=n.getFullYear();m=n.getMonth();}return txns.filter(function(t){return t.type==='expense'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+t.amt;},0);}
+function dataFingerprint(){return txns.length+'_'+getInc()+'_'+getExp()+'_'+portfolio.length+'_'+new Date().getMonth();}
 function getPortVal(){return portfolio.reduce(function(a,h){return a+h.qty*h.cur;},0);}
 function getPortPL(){return portfolio.reduce(function(a,h){return a+(h.cur-h.buy)*h.qty;},0);}
-window.addT=function(){const desc=document.getElementById('e-desc').value.trim();const amt=parseFloat(document.getElementById('e-amt').value);const type=document.getElementById('e-type').value;const cat=document.getElementById('e-cat').value;if(!desc||!amt||amt<=0){alert('Please fill in description and a valid amount.');return;}txns.unshift({id:Date.now(),desc:desc,amt:amt,type:type,cat:cat,mood:selMood,date:new Date().toLocaleDateString('en-IN')});save();renderAll();document.getElementById('e-desc').value='';document.getElementById('e-amt').value='';};
+window.addT=function(){const desc=document.getElementById('e-desc').value.trim();const amt=parseFloat(document.getElementById('e-amt').value);const type=document.getElementById('e-type').value;const cat=document.getElementById('e-cat').value;if(!desc||!amt||amt<=0){alert('Please fill in description and a valid amount.');return;}var dateVal=document.getElementById('e-date').value;var dateStr;if(dateVal){var dp=dateVal.split('-');dateStr=dp[2]+'/'+dp[1]+'/'+dp[0];}else{dateStr=new Date().toLocaleDateString('en-IN');}txns.unshift({id:Date.now(),desc:desc,amt:amt,type:type,cat:cat,mood:selMood,date:dateStr});save();renderAll();document.getElementById('e-desc').value='';document.getElementById('e-amt').value='';document.getElementById('e-date').value=new Date().toISOString().split('T')[0];document.getElementById('auto-badge').style.display='none';};
 window.removeT=function(id){txns=txns.filter(function(t){return t.id!==id;});save();renderAll();};
 window.addH=function(){const name=document.getElementById('p-name').value.trim();const sym=document.getElementById('p-sym').value.trim().toUpperCase();const type=document.getElementById('p-type').value;const qty=parseFloat(document.getElementById('p-qty').value);const buy=parseFloat(document.getElementById('p-buy').value);const cur=parseFloat(document.getElementById('p-cur').value);if(!name||!qty||!buy||!cur){alert('Please fill in all portfolio fields.');return;}const today=new Date().toLocaleDateString('en-IN');portfolio.push({id:Date.now(),name:name,sym:sym,type:type,qty:qty,buy:buy,cur:cur,priceHistory:[{date:today,price:cur}]});save();renderPortfolio();renderDash();['p-name','p-sym','p-qty','p-buy','p-cur'].forEach(function(id){document.getElementById(id).value='';});};
 window.removeH=function(id){portfolio=portfolio.filter(function(h){return h.id!==id;});save();renderPortfolio();renderDash();};
 window.updatePrice=function(id){const inp=document.getElementById('upd-'+id);const np=parseFloat(inp.value);if(!np||np<=0){alert('Enter a valid price.');return;}const h=portfolio.find(function(x){return x.id===id;});if(!h)return;h.cur=np;const today=new Date().toLocaleDateString('en-IN');if(!h.priceHistory)h.priceHistory=[];const last=h.priceHistory[h.priceHistory.length-1];if(last&&last.date===today)last.price=np;else h.priceHistory.push({date:today,price:np});inp.value='';save();renderPortfolio();renderDash();};
 window.togglePriceChart=function(id){const wrap=document.getElementById('ph-'+id);if(!wrap)return;if(wrap.style.display==='none'||!wrap.style.display){wrap.style.display='block';renderPriceChart(id);}else{wrap.style.display='none';if(priceCharts[id]){priceCharts[id].destroy();delete priceCharts[id];}}};
 function renderPriceChart(id){const h=portfolio.find(function(x){return x.id===id;});if(!h||!h.priceHistory||h.priceHistory.length<1)return;const canvas=document.getElementById('pc-'+id);if(!canvas)return;if(priceCharts[id])priceCharts[id].destroy();const c=cc();const labels=h.priceHistory.map(function(p){return p.date;});const data=h.priceHistory.map(function(p){return p.price;});const isUp=data[data.length-1]>=data[0];priceCharts[id]=new Chart(canvas,{type:'line',data:{labels:labels,datasets:[{data:data,borderColor:isUp?'#00d48a':'#ff5e7d',backgroundColor:isUp?'rgba(0,212,138,0.07)':'rgba(255,94,125,0.07)',borderWidth:2,pointRadius:3,pointBackgroundColor:isUp?'#00d48a':'#ff5e7d',fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(i){return'\u20b9'+i.raw.toLocaleString('en-IN');}}}},scales:{x:{ticks:{font:{size:10},color:c.tick},grid:{color:c.grid}},y:{ticks:{font:{size:10},color:c.tick,callback:function(v){return'\u20b9'+v.toLocaleString('en-IN');}},grid:{color:c.grid}}}}});}
-function renderAll(){renderDash();renderExpenses();}
-function renderDash(){const inc=getInc(),exp=getExp(),sav=inc-exp;document.getElementById('m-inc').textContent='\u20b9'+inc.toLocaleString('en-IN');document.getElementById('m-exp').textContent='\u20b9'+exp.toLocaleString('en-IN');document.getElementById('m-sav').textContent=(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN');document.getElementById('m-sav-s').textContent=sav>=0?'saved this month':'over budget';document.getElementById('m-sav-c').className='met '+(sav>=0?'gv':'rv');document.getElementById('m-port').textContent='\u20b9'+Math.round(getPortVal()).toLocaleString('en-IN');document.getElementById('m-port-s').textContent=portfolio.length+' holding'+(portfolio.length!==1?'s':'');const pl=getPortPL();document.getElementById('m-pl').textContent=(pl<0?'-':'')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN');document.getElementById('m-pl-c').className='met '+(pl>=0?'gv':'rv');const sc=calcScore();document.getElementById('m-sc').textContent=sc||'\u2014';document.getElementById('m-sc-s').textContent=sc>=70?'great shape':sc>=50?'doing ok':sc?'needs work':'add data';document.getElementById('m-inv').textContent='\u20b9'+Math.max(0,Math.round(sav*0.2)).toLocaleString('en-IN');const catT={};txns.filter(function(t){return t.type==='expense';}).forEach(function(t){catT[t.cat]=(catT[t.cat]||0)+t.amt;});const cats=Object.keys(catT);if(catChart)catChart.destroy();if(cats.length>0){const c=cc();catChart=new Chart(document.getElementById('catChart'),{type:'doughnut',data:{labels:cats.map(function(x){return CL[x]||x;}),datasets:[{data:cats.map(function(x){return catT[x];}),backgroundColor:cats.map(function(x){return CC[x]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}})}const rl=document.getElementById('recent-list');const rec=txns.slice(0,5);rl.innerHTML=rec.length?rec.map(function(t){return tHTML(t,false);}).join(''):'<div class="empty">No transactions yet. Add some in the Expenses tab.</div>';renderHeatmap();renderMonthProgress();generatePersonality(false);}
-function renderExpenses(){const al=document.getElementById('all-list');al.innerHTML=txns.length?txns.map(function(t){return tHTML(t,true);}).join(''):'<div class="empty">No transactions yet.</div>';}
+function renderAll(){renderDash();renderExpenses();renderStreak();renderQuickAdd();renderBills();}
+/* ── SMS/UPI TRANSACTION PARSER ── */
+var smsParseResult=null;
+window.parseSMS=function(){
+  var sms=(document.getElementById('sms-input').value||'').trim();
+  var resultEl=document.getElementById('sms-result');
+  if(sms.length<10){resultEl.style.display='none';smsParseResult=null;return;}
+  /* Extract amount */
+  var amtMatch=sms.match(/(?:INR|Rs\.?|\u20b9)\s*([\d,]+\.?\d*)/i)||
+               sms.match(/(?:debited|spent|paid|charged)\s*(?:INR|Rs\.?|\u20b9)?\s*([\d,]+\.?\d*)/i)||
+               sms.match(/([\d,]+\.?\d*)\s*(?:debited|withdrawn|spent)/i);
+  var amt=amtMatch?parseFloat(amtMatch[1].replace(/,/g,'')):0;
+  /* Extract merchant/description */
+  var merchant='Unknown';
+  var mMatch=sms.match(/(?:at|to|for|towards|UPI-|UPI\/|merchant:?)\s*([A-Za-z][A-Za-z0-9 .&'-]*)/i);
+  if(mMatch)merchant=mMatch[1].trim().replace(/\s+via.*/i,'').replace(/\s+on.*/i,'').substring(0,30);
+  /* Detect if it's a credit/income */
+  var isCredit=/(?:credited|received|deposit|refund|cashback)/i.test(sms);
+  /* Auto-categorise using merchant */
+  var cat='other';
+  var mLow=merchant.toLowerCase();
+  for(var c in AUTO_CAT){
+    for(var i=0;i<AUTO_CAT[c].length;i++){
+      if(mLow.indexOf(AUTO_CAT[c][i])!==-1){cat=c;break;}
+    }
+    if(cat!=='other')break;
+  }
+  if(amt>0){
+    smsParseResult={amt:amt,desc:merchant,cat:cat,isCredit:isCredit};
+    document.getElementById('sms-amt').textContent='\u20b9'+amt.toLocaleString('en-IN')+(isCredit?' (credit)':'');
+    document.getElementById('sms-merchant').textContent=merchant;
+    document.getElementById('sms-cat').textContent=(CL[cat]||cat);
+    resultEl.style.display='block';
+  }else{resultEl.style.display='none';smsParseResult=null;}
+};
+window.addFromSMS=function(){
+  if(!smsParseResult||!smsParseResult.amt)return;
+  txns.unshift({id:Date.now(),desc:smsParseResult.desc,amt:smsParseResult.amt,type:smsParseResult.isCredit?'income':'expense',cat:smsParseResult.cat,mood:'planned',date:new Date().toLocaleDateString('en-IN')});
+  save();renderAll();
+  document.getElementById('sms-input').value='';
+  document.getElementById('sms-result').style.display='none';
+  smsParseResult=null;
+};
+/* ── DAILY SPENDING ALLOWANCE ── */
+function renderAllowance(){
+  var card=document.getElementById('allowance-card');if(!card)return;
+  var inc=getInc(),exp=getExp();
+  if(inc===0){card.style.display='none';return;}
+  card.style.display='block';
+  var now=new Date();
+  var daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  var daysLeft=daysInMonth-now.getDate()+1;
+  var remaining=inc-exp;
+  var savingsTarget=Math.round(inc*0.2);
+  var spendable=Math.max(0,remaining-savingsTarget);
+  var daily=Math.round(spendable/Math.max(1,daysLeft));
+  document.getElementById('allowance-amt').textContent='\u20b9'+daily.toLocaleString('en-IN');
+  document.getElementById('allowance-emoji').textContent=daily>500?'\ud83d\udcb0':daily>200?'\ud83d\udfe2':daily>0?'\ud83d\udfe1':'\ud83d\udd34';
+  document.getElementById('allowance-sub').textContent=daysLeft+' days left \u00b7 \u20b9'+spendable.toLocaleString('en-IN')+' remaining (after 20% savings)';
+}
+/* ── BUDGET TRACKER ── */
+window.toggleBudgetEdit=function(){
+  var el=document.getElementById('budget-edit');
+  if(el.style.display==='none'){
+    el.style.display='block';
+    var cats=['food','transport','shopping','health','entertainment','bills','education','investment'];
+    document.getElementById('budget-set-grid').innerHTML=cats.map(function(c){
+      return'<div class="budget-item"><div class="budget-top"><div class="budget-cat"><div class="bdot" style="background:'+(CC[c]||'#888')+'"></div>'+(CL[c]||c)+'</div></div><input type="number" id="bset-'+c+'" placeholder="\u20b90" value="'+(budgets[c]||'')+'" min="0" style="width:100%;height:32px;font-size:12px" onchange="saveBudget(\''+c+'\',this.value)"/></div>';
+    }).join('');
+  }else{el.style.display='none';}
+};
+window.saveBudget=function(cat,val){
+  var v=parseInt(val)||0;
+  if(v>0)budgets[cat]=v;else delete budgets[cat];
+  save();renderBudgets();
+};
+function renderBudgets(){
+  var card=document.getElementById('budget-card');
+  var grid=document.getElementById('budget-progress-grid');
+  if(!card||!grid)return;
+  var hasBudgets=Object.keys(budgets).length>0;
+  card.style.display='block';
+  if(!hasBudgets){grid.innerHTML='<div style="font-size:12px;color:var(--text3);padding:10px">Click \u270f\ufe0f Set budgets to set monthly limits per category.</div>';return;}
+  var curMT=getCurMonthTxns();
+  var cs={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){cs[t.cat]=(cs[t.cat]||0)+t.amt;});
+  grid.innerHTML=Object.entries(budgets).map(function(e){
+    var cat=e[0],limit=e[1];
+    var spent=cs[cat]||0;
+    var pct=Math.min(100,Math.round(spent/limit*100));
+    var color=pct>=100?'var(--red)':pct>=75?'var(--orange)':'var(--green)';
+    var status=pct>=100?'\u26a0\ufe0f Over budget!':pct>=75?'\u26a0 Almost there':'\u2705 On track';
+    return'<div class="budget-item"><div class="budget-top"><div class="budget-cat"><div class="bdot" style="background:'+(CC[cat]||'#888')+'"></div>'+(CL[cat]||cat)+'</div><div class="budget-amt">\u20b9'+spent.toLocaleString('en-IN')+' / \u20b9'+limit.toLocaleString('en-IN')+'</div></div><div class="budget-bar"><div class="budget-fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="budget-status" style="color:'+color+'">'+status+' ('+pct+'%)</div></div>';
+  }).join('');
+}
+/* ── BILL REMINDERS ── */
+var bills=JSON.parse(localStorage.getItem('finai_bills')||'[]');
+window.addBill=function(){
+  var name=document.getElementById('bill-name').value.trim();
+  var amt=parseFloat(document.getElementById('bill-amt').value);
+  var day=parseInt(document.getElementById('bill-day').value);
+  if(!name||!amt||!day||day<1||day>31){alert('Fill all bill fields correctly.');return;}
+  bills.push({id:Date.now(),name:name,amt:amt,day:day});
+  localStorage.setItem('finai_bills',JSON.stringify(bills));
+  document.getElementById('bill-name').value='';
+  document.getElementById('bill-amt').value='';
+  document.getElementById('bill-day').value='';
+  renderBills();
+};
+window.removeBill=function(id){
+  bills=bills.filter(function(b){return b.id!==id;});
+  localStorage.setItem('finai_bills',JSON.stringify(bills));
+  renderBills();
+};
+window.payBill=function(id){
+  var b=bills.find(function(x){return x.id===id;});
+  if(!b)return;
+  txns.unshift({id:Date.now(),desc:b.name,amt:b.amt,type:'expense',cat:'bills',mood:'planned',date:new Date().toLocaleDateString('en-IN')});
+  save();renderAll();
+};
+function renderBills(){
+  var list=document.getElementById('bills-list');if(!list)return;
+  if(bills.length===0){list.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px">No recurring bills. Add rent, EMI, Netflix, etc.</div>';return;}
+  var now=new Date();
+  var today=now.getDate();
+  var icons={'rent':'\ud83c\udfe0','emi':'\ud83c\udfe6','netflix':'\ud83c\udfac','hotstar':'\ud83d\udcfa','spotify':'\ud83c\udfb5','gym':'\ud83c\udfcb\ufe0f','insurance':'\ud83d\udee1\ufe0f','electricity':'\u26a1','wifi':'\ud83c\udf10','jio':'\ud83d\udcf1','airtel':'\ud83d\udcf6'};
+  list.innerHTML=bills.sort(function(a,b){
+    var da=(a.day>=today)?a.day-today:a.day+new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-today;
+    var db2=(b.day>=today)?b.day-today:b.day+new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-today;
+    return da-db2;
+  }).map(function(b){
+    var daysUntil=(b.day>=today)?b.day-today:b.day+new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-today;
+    var dueClass=daysUntil===0?'overdue':daysUntil<=3?'soon':'ok';
+    var dueText=daysUntil===0?'Today!':daysUntil===1?'Tomorrow':daysUntil<=7?'In '+daysUntil+' days':'Day '+b.day;
+    var icon='\ud83d\udcb3';
+    var nLow=b.name.toLowerCase();
+    for(var k in icons){if(nLow.indexOf(k)!==-1){icon=icons[k];break;}}
+    return'<div class="bill-item"><div class="bill-icon">'+icon+'</div><div class="bill-info"><div class="bill-name">'+b.name+'</div><div class="bill-meta">Due on '+b.day+(b.day===1?'st':b.day===2?'nd':b.day===3?'rd':'th')+' every month</div></div><div class="bill-right"><div class="bill-amt">\u20b9'+b.amt.toLocaleString('en-IN')+'</div><div class="bill-due '+dueClass+'">'+dueText+'</div></div><button class="btn sm pri" style="font-size:10px;padding:4px 10px" onclick="payBill('+b.id+')">Pay</button><span class="rm" onclick="removeBill('+b.id+')" style="cursor:pointer">\u00d7</span></div>';
+  }).join('');
+}
+/* ── STREAK TRACKER ── */
+function renderStreak(){
+  var card=document.getElementById('streak-card');if(!card)return;
+  /* Build set of date keys normalised as d/m/yyyy */
+  var dateSet={};txns.forEach(function(t){
+    var p=t.date.split('/');
+    var nk=parseInt(p[0])+'/'+parseInt(p[1])+'/'+parseInt(p[2]);
+    dateSet[nk]=true;
+  });
+  if(Object.keys(dateSet).length===0){card.style.display='none';return;}
+  card.style.display='flex';
+  var today=new Date();var streak=0;var check=new Date(today);
+  for(var i=0;i<365;i++){
+    var ds=check.getDate()+'/'+(check.getMonth()+1)+'/'+check.getFullYear();
+    if(dateSet[ds]){streak++;}else if(i>0){break;}
+    check.setDate(check.getDate()-1);
+  }
+  var best=parseInt(localStorage.getItem('finai_best_streak')||'0');
+  if(streak>best){best=streak;localStorage.setItem('finai_best_streak',best.toString());}
+  document.getElementById('streak-num').textContent=streak;
+  document.getElementById('streak-label').textContent=streak===1?'day streak':'day streak';
+  document.getElementById('streak-best').textContent='Best: '+best;
+  var emoji=streak>=30?'\ud83c\udf1f':streak>=14?'\ud83d\udd25':streak>=7?'\u2b50':streak>=3?'\ud83d\udcaa':'\ud83c\udf31';
+  document.getElementById('streak-emoji').textContent=emoji;
+}
+/* ── QUICK ADD BUTTONS ── */
+function renderQuickAdd(){
+  var wrap=document.getElementById('quick-add-wrap');
+  var section=document.getElementById('quick-add-section');
+  if(!wrap||!section)return;
+  var freq={};txns.forEach(function(t){
+    if(t.type!=='expense')return;
+    var key=t.desc.toLowerCase().trim();
+    if(!freq[key])freq[key]={desc:t.desc,cat:t.cat,amt:t.amt,count:0};
+    freq[key].count++;freq[key].amt=t.amt;
+  });
+  var top=Object.values(freq).filter(function(f){return f.count>=2;}).sort(function(a,b){return b.count-a.count;}).slice(0,6);
+  if(top.length===0){section.style.display='none';return;}
+  section.style.display='block';
+  wrap.innerHTML=top.map(function(f){
+    return'<button class="qa-btn" onclick="quickAdd(\''+f.desc.replace(/'/g,"\\'")+'\','+f.amt+',\''+f.cat+'\')"><div class="qa-cat" style="background:'+(CC[f.cat]||'#888')+'"></div>'+f.desc+' \u20b9'+f.amt.toLocaleString('en-IN')+'</button>';
+  }).join('');
+}
+window.quickAdd=function(desc,amt,cat){
+  txns.unshift({id:Date.now(),desc:desc,amt:amt,type:'expense',cat:cat,mood:'planned',date:new Date().toLocaleDateString('en-IN')});
+  save();renderAll();
+};
+/* ── MONTHLY SPENDING TREND CHART ── */
+function renderTrend(){
+  var canvas=document.getElementById('trendChart');if(!canvas)return;
+  if(trendChart)trendChart.destroy();
+  var now=new Date();var labels=[],incD=[],expD=[];
+  for(var i=5;i>=0;i--){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    labels.push(d.toLocaleString('en-IN',{month:'short',year:'2-digit'}));
+    incD.push(getInc(d.getFullYear(),d.getMonth()));
+    expD.push(getExp(d.getFullYear(),d.getMonth()));
+  }
+  if(incD.every(function(v){return v===0;})&&expD.every(function(v){return v===0;}))return;
+  var c=cc();
+  trendChart=new Chart(canvas,{type:'line',data:{labels:labels,datasets:[{label:'Income',data:incD,borderColor:'#00d48a',backgroundColor:'rgba(0,212,138,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#00d48a',fill:true,tension:0.4},{label:'Expenses',data:expD,borderColor:'#ff5e7d',backgroundColor:'rgba(255,94,125,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#ff5e7d',fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:c.tick,boxWidth:10,padding:14}}},scales:{x:{ticks:{color:c.tick,font:{size:10}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:10},callback:function(v){return fmt(v);}},grid:{color:c.grid}}}}});
+}
+/* ── EMAIL MONTHLY REPORT ── */
+window.emailReport=function(){
+  var now=new Date();
+  var mLabel=now.toLocaleString('en-IN',{month:'long',year:'numeric'});
+  var inc=getInc(),exp=getExp(),sav=inc-exp,sc=calcScore();
+  var savRate=inc>0?Math.round((sav/inc)*100):0;
+  var curMT=getCurMonthTxns();
+  var cs={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){cs[t.cat]=(cs[t.cat]||0)+t.amt;});
+  var topCats=Object.entries(cs).sort(function(a,b){return b[1]-a[1];}).slice(0,5).map(function(e){return(CL[e[0]]||e[0])+': \u20b9'+Math.round(e[1]).toLocaleString('en-IN');}).join('\n  ');
+  var impT=curMT.filter(function(t){return t.mood==='impulsive'||t.mood==='regret';});
+  var impAmt=impT.reduce(function(a,t){return a+t.amt;},0);
+  var portVal=getPortVal(),portPL=getPortPL();
+  var subject='FinAI Monthly Report \u2014 '+mLabel;
+  var body='\ud83d\udcca FinAI Monthly Report \u2014 '+mLabel+'\n';
+  body+='='.repeat(40)+'\n\n';
+  body+='SUMMARY\n';
+  body+='  Income:      \u20b9'+inc.toLocaleString('en-IN')+'\n';
+  body+='  Expenses:    \u20b9'+exp.toLocaleString('en-IN')+'\n';
+  body+='  Net Savings: \u20b9'+Math.abs(sav).toLocaleString('en-IN')+(sav<0?' (OVER BUDGET)':'')+'\n';
+  body+='  Savings Rate: '+savRate+'%\n';
+  body+='  Health Score: '+sc+'/100\n\n';
+  body+='TOP SPENDING\n  '+topCats+'\n\n';
+  if(impT.length>0)body+='\u26a0 IMPULSE SPENDING: '+impT.length+' purchases = \u20b9'+Math.round(impAmt).toLocaleString('en-IN')+'\n\n';
+  if(portfolio.length>0)body+='PORTFOLIO\n  Value: \u20b9'+Math.round(portVal).toLocaleString('en-IN')+' | P&L: '+(portPL>=0?'+':'-')+'\u20b9'+Math.round(Math.abs(portPL)).toLocaleString('en-IN')+'\n\n';
+  body+='\u2014\nGenerated by FinAI Personal Finance OS\nhttps://soumya074.github.io/FinAi';
+  window.location.href='mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+};
+function renderDash(){const inc=getInc(),exp=getExp(),sav=inc-exp;document.getElementById('m-inc').textContent='\u20b9'+inc.toLocaleString('en-IN');document.getElementById('m-exp').textContent='\u20b9'+exp.toLocaleString('en-IN');document.getElementById('m-sav').textContent=(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN');document.getElementById('m-sav-s').textContent=sav>=0?'saved this month':'over budget';document.getElementById('m-sav-c').className='met '+(sav>=0?'gv':'rv');document.getElementById('m-port').textContent='\u20b9'+Math.round(getPortVal()).toLocaleString('en-IN');document.getElementById('m-port-s').textContent=portfolio.length+' holding'+(portfolio.length!==1?'s':'');const pl=getPortPL();document.getElementById('m-pl').textContent=(pl<0?'-':'')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN');document.getElementById('m-pl-c').className='met '+(pl>=0?'gv':'rv');const sc=calcScore();document.getElementById('m-sc').textContent=sc||'\u2014';document.getElementById('m-sc-s').textContent=sc>=70?'great shape':sc>=50?'doing ok':sc?'needs work':'add data';document.getElementById('m-inv').textContent='\u20b9'+Math.max(0,Math.round(sav*0.2)).toLocaleString('en-IN');const curMT=getCurMonthTxns();const catT={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){catT[t.cat]=(catT[t.cat]||0)+t.amt;});const cats=Object.keys(catT);if(catChart)catChart.destroy();if(cats.length>0){const c=cc();catChart=new Chart(document.getElementById('catChart'),{type:'doughnut',data:{labels:cats.map(function(x){return CL[x]||x;}),datasets:[{data:cats.map(function(x){return catT[x];}),backgroundColor:cats.map(function(x){return CC[x]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}})}const rl=document.getElementById('recent-list');const rec=curMT.slice(0,5);rl.innerHTML=rec.length?rec.map(function(t){return tHTML(t,false);}).join(''):'<div class="empty">No transactions this month. Add some in the Expenses tab.</div>';renderHeatmap();renderMonthProgress();generatePersonality(false);renderAllowance();renderBudgets();}
+function renderExpenses(){const al=document.getElementById('all-list');const now=new Date();const mLabel=now.toLocaleString('en-IN',{month:'long',year:'numeric'});const curMT=getCurMonthTxns();const olderT=txns.filter(function(t){return !isInMonth(t,now.getFullYear(),now.getMonth());});let html='';if(curMT.length>0){html+='<div style="font-size:12px;color:var(--text2);font-weight:600;padding:8px 4px;text-transform:uppercase;letter-spacing:0.06em">'+mLabel+' ('+curMT.length+' transactions)</div>';html+=curMT.map(function(t){return tHTML(t,true);}).join('');}if(olderT.length>0){html+='<div style="font-size:12px;color:var(--text3);font-weight:600;padding:12px 4px 8px;text-transform:uppercase;letter-spacing:0.06em;border-top:1px solid var(--border);margin-top:8px">Older transactions ('+olderT.length+')</div>';html+=olderT.map(function(t){return tHTML(t,true);}).join('');}if(!html)html='<div class="empty">No transactions yet.</div>';al.innerHTML=html;}
 function tHTML(t,rm){return'<div class="ti"><div class="dot" style="background:'+(CC[t.cat]||'#888')+'"></div><div class="ti-main"><div class="ti-desc">'+t.desc+'</div><div class="ti-meta">'+(CL[t.cat]||t.cat)+' \u00b7 '+t.date+'</div></div><div class="ti-right"><span class="mood-tag" style="border-color:'+(MC[t.mood]||'#888')+'">'+(t.mood||'\u2014')+'</span><span class="ti-amt'+(t.type==='income'?' inc':'')+'">'+( t.type==='income'?'+':'-')+'\u20b9'+t.amt.toLocaleString('en-IN')+'</span>'+(rm?'<span class="rm" onclick="removeT('+t.id+')">&#215;</span>':'')+'</div></div>';}
 function renderPortfolio(){const list=document.getElementById('holdings-list');const empty=document.getElementById('port-empty');const pc=document.getElementById('port-chart-card');if(portfolio.length===0){list.innerHTML='';empty.style.display='block';pc.style.display='none';return;}empty.style.display='none';pc.style.display='block';list.innerHTML=portfolio.map(function(h){const val=h.qty*h.cur,cost=h.qty*h.buy,pl=val-cost,plPct=pl/cost*100,isPos=pl>=0;const hist=h.priceHistory||[];const ch1d=hist.length>=2?((hist[hist.length-1].price-hist[hist.length-2].price)/hist[hist.length-2].price*100):null;return'<div class="holding-card"><div class="holding-header"><div><div class="holding-name">'+h.name+(h.sym?' <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">'+h.sym+'</span>':'')+'</div><div style="margin-top:5px;display:flex;align-items:center;gap:8px"><span class="badge" style="background:'+(TC[h.type]||'#888')+'25;color:'+(TC[h.type]||'#888')+'">'+h.type.toUpperCase()+'</span>'+(ch1d!==null?'<span class="pill '+(ch1d>=0?'up':'down')+'">'+(ch1d>=0?'\u25b2':'\u25bc')+' '+Math.abs(ch1d).toFixed(2)+'% today</span>':'')+'</div></div><button class="btn sm red" onclick="removeH('+h.id+')">Remove</button></div><div class="holding-stats"><div class="h-stat"><div class="hl">Current value</div><div class="hv">'+fmt(val)+'</div></div><div class="h-stat"><div class="hl">Unrealised P&L</div><div class="hv '+(isPos?'pos':'neg')+'">'+(isPos?'+':'-')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN')+'</div></div><div class="h-stat"><div class="hl">Total return</div><div class="hv '+(isPos?'pos':'neg')+'">'+(isPos?'+':'')+plPct.toFixed(2)+'%</div></div><div class="h-stat"><div class="hl">Qty \u00b7 Buy price</div><div class="hv">'+h.qty+' \u00b7 \u20b9'+h.buy.toLocaleString('en-IN',{maximumFractionDigits:2})+'</div></div></div><div class="update-row"><label>Update price:</label><input type="number" id="upd-'+h.id+'" placeholder="\u20b9 today\'s price" style="flex:1;height:36px" min="0" step="any"/><button class="btn sm pri" onclick="updatePrice('+h.id+')">Update</button><button class="ph-btn" onclick="togglePriceChart('+h.id+')">'+hist.length+' entries \u00b7 '+(hist.length>0?'View chart':'No history')+'</button></div><div id="ph-'+h.id+'" class="price-chart-wrap" style="display:none"><div class="cw" style="height:150px"><canvas id="pc-'+h.id+'"></canvas></div></div></div>';}).join('');const c=cc();if(portChart)portChart.destroy();const typeT={};portfolio.forEach(function(h){const k=h.type.toUpperCase();typeT[k]=(typeT[k]||0)+h.qty*h.cur;});portChart=new Chart(document.getElementById('portChart'),{type:'doughnut',data:{labels:Object.keys(typeT),datasets:[{data:Object.values(typeT).map(function(v){return Math.round(v);}),backgroundColor:Object.keys(typeT).map(function(k){return TC[k.toLowerCase()]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}});}
 const RA={low:{eq:30,debt:50,gold:10,intl:5,cash:5,desc:'Capital protection priority. Mostly debt and bonds with limited equity.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff','#64748b'],labels:['Equity 30%','Debt 50%','Gold 10%','Intl 5%','Cash 5%']},moderate:{eq:60,debt:25,gold:10,intl:5,cash:0,desc:'Balanced growth and stability. Good for 5\u201310 year horizon.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff'],labels:['Equity 60%','Debt 25%','Gold 10%','Intl 5%']},high:{eq:75,debt:10,gold:5,intl:10,cash:0,desc:'Majority equity for maximum long-term growth. 10+ year horizon.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff'],labels:['Equity 75%','Debt 10%','Gold 5%','Intl 10%']},ultra:{eq:90,debt:0,gold:5,intl:5,cash:0,desc:'Almost entirely equity. For young investors with 15+ year horizon.',color:['#00d48a','#ffb547','#4d9fff'],labels:['Equity 90%','Gold 5%','Intl 5%']}};
 const IS={low:['Open FD with SBI/HDFC \u2014 6.5\u20137% guaranteed return, zero risk','Invest in UTI Liquid Fund for better return than savings account','Add SBI ELSS Fund for \u20b91.5L tax deduction under 80C','Buy Sovereign Gold Bonds \u2014 gold returns plus 2.5% extra interest per year'],moderate:['Start SIP in UTI Nifty 50 Index Fund \u2014 \u20b92000/month minimum','Add HDFC Mid-Cap Opportunities Fund for extra growth','Keep 25% in ICICI Short Duration Debt Fund for stability','Set auto-SIP so money invests before you spend it'],high:['Core: Nifty 50 ETF via Zerodha or Groww (50% of equity)','Growth: 2 mid/small cap mutual funds (30% of equity)','Thematic: 1 sectoral fund \u2014 IT or Pharma ETF (20% of equity)','Use Sovereign Gold Bond as inflation hedge'],ultra:['80% equity: 40% large-cap + 30% mid-cap + 10% small-cap funds','10% international: Motilal Nasdaq 100 FOF or Mirae S&P 500 ETF','Start individual stocks only after 2+ years of MF experience','Zerodha Kite \u2014 check PE ratio, ROE before buying any stock']};
 function renderInvest(){const a=RA[curRisk];const map={low:'low',moderate:'mod',high:'hi',ultra:'agg'};['low','mod','hi','agg'].forEach(function(x){document.getElementById('rb-'+x).className='rbtn';});document.getElementById('rb-'+map[curRisk]).className='rbtn sel-'+map[curRisk];const segs=[];if(a.eq)segs.push({w:a.eq,c:a.color[0]});if(a.debt)segs.push({w:a.debt,c:a.color[1]});if(a.gold)segs.push({w:a.gold,c:a.color[a.debt?2:1]});if(a.intl)segs.push({w:a.intl,c:a.color[a.debt?3:2]});if(a.cash)segs.push({w:a.cash,c:'#64748b'});document.getElementById('alloc-bar').innerHTML=segs.map(function(s){return'<div class="alloc-seg" style="width:'+s.w+'%;background:'+s.c+'">'+(s.w>12?s.w+'%':'')+'</div>';}).join('');document.getElementById('alloc-legend').innerHTML=a.labels.map(function(l,i){return'<div class="leg-item"><div class="leg-dot" style="background:'+a.color[i]+'"></div>'+l+'</div>';}).join('');document.getElementById('alloc-desc').textContent=a.desc;document.getElementById('invest-steps').innerHTML=IS[curRisk].map(function(s,i){return'<div class="step"><div class="step-num">'+(i+1)+'</div><div><div class="step-desc">'+s+'</div></div></div>';}).join('');const inst={low:[{n:'SBI / HDFC FD',t:'Bond/FD',r:'6.5\u20137%',risk:'Very Low'},{n:'UTI Liquid Fund',t:'Liquid MF',r:'6.5\u20137.5%',risk:'Very Low'},{n:'SBI ELSS Fund',t:'ELSS MF',r:'12\u201314%',risk:'Medium'},{n:'Sovereign Gold Bond',t:'Gold',r:'CMP + 2.5%',risk:'Low'}],moderate:[{n:'UTI Nifty 50 Index',t:'Index MF',r:'12\u201314%',risk:'Medium'},{n:'HDFC Mid-Cap Opp',t:'MF',r:'15\u201318%',risk:'Med-High'},{n:'ICICI Short Duration',t:'Debt MF',r:'7\u20138%',risk:'Low'},{n:'Mirae Asset ELSS',t:'ELSS MF',r:'13\u201316%',risk:'Medium'},{n:'Gold BeES ETF',t:'ETF',r:'Market linked',risk:'Low'}],high:[{n:'Nippon India Small Cap',t:'MF',r:'18\u201322%',risk:'High'},{n:'Nifty 50 ETF (NSE)',t:'ETF',r:'12\u201315%',risk:'Medium'},{n:'Axis Midcap Fund',t:'MF',r:'16\u201320%',risk:'High'},{n:'SBI Technology Opp',t:'Sectoral',r:'20%+',risk:'Very High'},{n:'Parag Parikh Flexi Cap',t:'MF',r:'15\u201318%',risk:'Medium'}],ultra:[{n:'Direct Stocks (NSE/BSE)',t:'Equity',r:'Market',risk:'Very High'},{n:'Motilal Nasdaq 100 FOF',t:'Intl MF',r:'18\u201325%',risk:'High'},{n:'Quant Small Cap Fund',t:'MF',r:'25%+ (10yr)',risk:'Very High'},{n:'Nifty Midcap 150 ETF',t:'ETF',r:'15\u201320%',risk:'High'},{n:'Sovereign Gold Bond',t:'Gold',r:'CMP + 2.5%',risk:'Low'}]};document.getElementById('instruments-list').innerHTML='<table class="stbl"><thead><tr><th>Instrument</th><th>Type</th><th>Avg return</th><th>Risk level</th></tr></thead><tbody>'+(inst[curRisk]||[]).map(function(i){return'<tr><td style="font-weight:600">'+i.n+'</td><td><span class="badge" style="background:'+(TC[i.t.toLowerCase().split('/')[0].split(' ')[0]]||'#4d9fff')+'25;color:'+(TC[i.t.toLowerCase().split('/')[0].split(' ')[0]]||'#4d9fff')+'">'+i.t+'</span></td><td style="color:var(--green);font-weight:600;font-family:var(--mono)">'+i.r+'</td><td style="color:var(--text2)">'+i.risk+'</td></tr>';}).join('')+'</tbody></table>';}
 window.calcSIP=function(){const amt=parseInt(document.getElementById('sip-a').value);const rate=parseInt(document.getElementById('sip-r').value);const yr=parseInt(document.getElementById('sip-y').value);document.getElementById('sip-av').textContent='\u20b9'+amt.toLocaleString('en-IN');document.getElementById('sip-rv').textContent=rate+'%';document.getElementById('sip-yv').textContent=yr+' year'+(yr>1?'s':'');const months=yr*12,r=rate/100/12;const fv=amt*(((Math.pow(1+r,months)-1)/r)*(1+r));const invested=amt*months;document.getElementById('sip-inv').textContent=fmt(invested);document.getElementById('sip-ret').textContent=fmt(fv-invested);document.getElementById('sip-tot').textContent=fmt(fv);const labels=[],invD=[],fvD=[];for(let y=1;y<=yr;y++){const m=y*12,r2=rate/100/12,fvy=amt*(((Math.pow(1+r2,m)-1)/r2)*(1+r2));labels.push(y+'y');invD.push(Math.round(amt*m));fvD.push(Math.round(fvy));}const c=cc();if(sipChart)sipChart.destroy();sipChart=new Chart(document.getElementById('sipChart'),{type:'bar',data:{labels:labels,datasets:[{label:'Invested',data:invD,backgroundColor:'rgba(77,159,255,0.25)',borderWidth:0},{label:'Value',data:fvD,backgroundColor:'#00d48a',borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:10}}},y:{ticks:{color:c.tick,font:{size:10},callback:function(v){if(v>=10000000)return'\u20b9'+(v/10000000).toFixed(0)+'Cr';if(v>=100000)return'\u20b9'+(v/100000).toFixed(0)+'L';return'\u20b9'+v.toLocaleString('en-IN');}},grid:{color:c.grid}}}}});};
-function calcScore(){const inc=getInc(),exp=getExp();if(inc===0&&exp===0&&portfolio.length===0)return 0;const savRate=inc>0?Math.min(1,(inc-exp)/inc):0;const allExp=txns.filter(function(t){return t.type==='expense';});const impT=txns.filter(function(t){return t.mood==='impulsive'||t.mood==='regret';});return Math.round(savRate*35)+Math.round((allExp.length>0?1-impT.length/allExp.length:1)*25)+20+Math.min(20,portfolio.length*4+(portfolio.length>0?4:0));}
-function renderHealth(){const inc=getInc(),exp=getExp(),sc=calcScore();document.getElementById('sc-big').textContent=sc||'\u2014';const arc=document.getElementById('sc-arc');arc.style.strokeDashoffset=264-(264*sc/100);arc.style.stroke=sc>=70?'#00d48a':sc>=50?'#ffb547':'#ff5e7d';const savRate=inc>0?Math.round(((inc-exp)/inc)*100):0;document.getElementById('sb-sv').textContent=Math.max(0,savRate)+'%';document.getElementById('sf-sv').style.width=Math.max(0,Math.min(100,savRate))+'%';const allExp=txns.filter(function(t){return t.type==='expense';}),impT=txns.filter(function(t){return t.mood==='impulsive'||t.mood==='regret';});const ic=allExp.length>0?Math.round((1-impT.length/allExp.length)*100):100;document.getElementById('sb-ic').textContent=ic+'%';document.getElementById('sf-ic').style.width=ic+'%';const ia=Math.min(100,portfolio.length*20);document.getElementById('sb-ia').textContent=ia+'%';document.getElementById('sf-ia').style.width=ia+'%';const insights=[];if(txns.length===0&&portfolio.length===0){insights.push({t:'neutral',title:'Getting started',text:'Add transactions and portfolio holdings to unlock personalised insights.'});}else{const sr=inc>0?Math.round(((inc-exp)/inc)*100):0;if(sr>=30)insights.push({t:'good',title:'Strong savings rate',text:'You save '+sr+'% of income \u2014 above the 20% benchmark.'});else if(sr<10&&inc>0)insights.push({t:'warn',title:'Low savings rate',text:'Only '+sr+'% saved. Target at least 20%.'});if(portfolio.length===0)insights.push({t:'info',title:'Start investing',text:'No investments yet. Even \u20b9500/month in a Nifty 50 Index Fund builds serious wealth over 10+ years.'});else{const pl=getPortPL();insights.push({t:pl>=0?'good':'warn',title:pl>=0?'Portfolio in profit':'Portfolio in loss',text:pl>=0?'Your portfolio is up \u20b9'+Math.round(pl).toLocaleString('en-IN')+'. Stay invested.':'Down \u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN')+'. Keep your SIP running.'});}if(impT.length>0)insights.push({t:'warn',title:'Impulse spending',text:impT.length+' impulsive purchases = \u20b9'+impT.reduce(function(a,t){return a+t.amt;},0).toLocaleString('en-IN')+' that could be invested.'});else if(allExp.length>2)insights.push({t:'good',title:'Excellent discipline',text:'All recent expenses were planned or necessary.'});}document.getElementById('ins-grid').innerHTML=insights.map(function(i){return'<div class="ins '+i.t+'"><div class="it">'+i.title+'</div>'+i.text+'</div>';}).join('');}
+function calcScore(){const inc=getInc(),exp=getExp();if(inc===0&&exp===0&&portfolio.length===0)return 0;const savRate=inc>0?Math.min(1,(inc-exp)/inc):0;const curMT=getCurMonthTxns();const allExp=curMT.filter(function(t){return t.type==='expense';});const impT=curMT.filter(function(t){return t.mood==='impulsive'||t.mood==='regret';});return Math.round(savRate*35)+Math.round((allExp.length>0?1-impT.length/allExp.length:1)*25)+20+Math.min(20,portfolio.length*4+(portfolio.length>0?4:0));}
+function renderHealth(){const inc=getInc(),exp=getExp(),sc=calcScore();document.getElementById('sc-big').textContent=sc||'\u2014';const arc=document.getElementById('sc-arc');arc.style.strokeDashoffset=264-(264*sc/100);arc.style.stroke=sc>=70?'#00d48a':sc>=50?'#ffb547':'#ff5e7d';const savRate=inc>0?Math.round(((inc-exp)/inc)*100):0;document.getElementById('sb-sv').textContent=Math.max(0,savRate)+'%';document.getElementById('sf-sv').style.width=Math.max(0,Math.min(100,savRate))+'%';const curMT=getCurMonthTxns();const allExp=curMT.filter(function(t){return t.type==='expense';}),impT=curMT.filter(function(t){return t.mood==='impulsive'||t.mood==='regret';});const ic=allExp.length>0?Math.round((1-impT.length/allExp.length)*100):100;document.getElementById('sb-ic').textContent=ic+'%';document.getElementById('sf-ic').style.width=ic+'%';const ia=Math.min(100,portfolio.length*20);document.getElementById('sb-ia').textContent=ia+'%';document.getElementById('sf-ia').style.width=ia+'%';const insights=[];if(txns.length===0&&portfolio.length===0){insights.push({t:'neutral',title:'Getting started',text:'Add transactions and portfolio holdings to unlock personalised insights.'});}else{const sr=inc>0?Math.round(((inc-exp)/inc)*100):0;if(sr>=30)insights.push({t:'good',title:'Strong savings rate',text:'You save '+sr+'% of income \u2014 above the 20% benchmark.'});else if(sr<10&&inc>0)insights.push({t:'warn',title:'Low savings rate',text:'Only '+sr+'% saved. Target at least 20%.'});if(portfolio.length===0)insights.push({t:'info',title:'Start investing',text:'No investments yet. Even \u20b9500/month in a Nifty 50 Index Fund builds serious wealth over 10+ years.'});else{const pl=getPortPL();insights.push({t:pl>=0?'good':'warn',title:pl>=0?'Portfolio in profit':'Portfolio in loss',text:pl>=0?'Your portfolio is up \u20b9'+Math.round(pl).toLocaleString('en-IN')+'. Stay invested.':'Down \u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN')+'. Keep your SIP running.'});}if(impT.length>0)insights.push({t:'warn',title:'Impulse spending',text:impT.length+' impulsive purchases = \u20b9'+impT.reduce(function(a,t){return a+t.amt;},0).toLocaleString('en-IN')+' that could be invested.'});else if(allExp.length>2)insights.push({t:'good',title:'Excellent discipline',text:'All recent expenses were planned or necessary.'});}document.getElementById('ins-grid').innerHTML=insights.map(function(i){return'<div class="ins '+i.t+'"><div class="it">'+i.title+'</div>'+i.text+'</div>';}).join('');}
 window.genPDF=function(){const inc=getInc(),exp=getExp(),sav=inc-exp,sc=calcScore();const today=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});const catT={};txns.filter(function(t){return t.type==='expense';}).forEach(function(t){catT[t.cat]=(catT[t.cat]||0)+t.amt;});const w=window.open('','_blank');const s='<'+'script'+'>';const es='<'+'/script'+'>';w.document.write('<!DOCTYPE html><html><head><title>FinAI Report</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:32px;color:#111;font-size:13px;line-height:1.6}h1{font-size:24px;font-weight:700;color:#00a86b}h2{font-size:13px;font-weight:700;margin:22px 0 10px;padding-bottom:5px;border-bottom:2px solid #00a86b;color:#00a86b;text-transform:uppercase}.sub{color:#666;font-size:12px;margin-bottom:28px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{background:#f9fafb;border-radius:8px;padding:14px;text-align:center;border:1px solid #e5e7eb}.stat .v{font-size:22px;font-weight:700;color:#00a86b}.stat.r .v{color:#ef4444}.stat .l{font-size:11px;color:#666;margin-top:3px}.score-box{background:#f0fdf4;border-radius:10px;padding:20px;text-align:center;margin-bottom:20px;border:1px solid #86efac}.score-box .sv{font-size:48px;font-weight:700;color:#00a86b}.score-box .sl{color:#166534;font-size:13px}table{width:100%;border-collapse:collapse;margin-bottom:16px}th{background:#f9fafb;padding:8px 10px;text-align:left;font-size:11px;color:#374151;border-bottom:1px solid #e5e7eb;text-transform:uppercase}td{padding:8px 10px;border-bottom:1px solid #f3f4f6;font-size:12px}.g{color:#00a86b;font-weight:700}.r{color:#ef4444;font-weight:700}.footer{margin-top:32px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center}</style></head><body><h1>FinAI \u2014 Financial Report</h1><div class="sub">'+today+'</div><h2>Summary</h2><div class="grid"><div class="stat"><div class="v">\u20b9'+inc.toLocaleString('en-IN')+'</div><div class="l">Income</div></div><div class="stat r"><div class="v">\u20b9'+exp.toLocaleString('en-IN')+'</div><div class="l">Expenses</div></div><div class="stat '+(sav<0?'r':'')+'"><div class="v">'+(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN')+'</div><div class="l">Net Savings</div></div></div><div class="score-box"><div class="sv">'+sc+'/100</div><div class="sl">'+(sc>=70?'Great shape!':sc>=50?'Doing ok':'Needs attention')+'</div></div><h2>Spending</h2><table><thead><tr><th>Category</th><th>Amount</th><th>%</th></tr></thead><tbody>'+Object.entries(catT).sort(function(a,b){return b[1]-a[1];}).map(function(e){return'<tr><td>'+(CL[e[0]]||e[0])+'</td><td>\u20b9'+e[1].toLocaleString('en-IN')+'</td><td>'+(exp>0?((e[1]/exp)*100).toFixed(1):0)+'%</td></tr>';}).join('')+'</tbody></table>'+(portfolio.length>0?'<h2>Portfolio</h2><table><thead><tr><th>Name</th><th>Type</th><th>Qty</th><th>Buy</th><th>Current</th><th>Value</th><th>Return</th></tr></thead><tbody>'+portfolio.map(function(h){const val=h.qty*h.cur,pl2=val-h.qty*h.buy,pct=pl2/(h.qty*h.buy)*100;return'<tr><td>'+h.name+'</td><td>'+h.type.toUpperCase()+'</td><td>'+h.qty+'</td><td>\u20b9'+h.buy.toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>\u20b9'+h.cur.toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>\u20b9'+Math.round(val).toLocaleString('en-IN')+'</td><td class="'+(pct>=0?'g':'r')+'">'+(pct>=0?'+':'')+pct.toFixed(1)+'%</td></tr>';}).join('')+'</tbody></table>':'')+'<h2>Recent Transactions</h2><table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Mood</th><th>Type</th><th>Amount</th></tr></thead><tbody>'+txns.slice(0,20).map(function(t){return'<tr><td>'+t.date+'</td><td>'+t.desc+'</td><td>'+(CL[t.cat]||t.cat)+'</td><td>'+(t.mood||'\u2014')+'</td><td>'+t.type+'</td><td class="'+(t.type==='income'?'g':'r')+'">'+(t.type==='income'?'+':'-')+'\u20b9'+t.amt.toLocaleString('en-IN')+'</td></tr>';}).join('')+'</tbody></table><div class="footer">FinAI Personal Finance OS \u00b7 Not SEBI-registered financial advice</div>'+s+'window.onload=function(){setTimeout(function(){window.print();},400);}'+es+'</body></html>');w.document.close();};
 window.exportJSON=function(){const data={txns:txns,portfolio:portfolio,budgets:budgets,curRisk:curRisk,exportedAt:new Date().toISOString(),version:'finai-v4'};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='finai-backup-'+new Date().toLocaleDateString('en-IN').replace(/\//g,'-')+'.json';a.click();};
 window.importJSON=function(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const data=JSON.parse(e.target.result);if(!data.version||!data.version.startsWith('finai')){alert('Invalid FinAI backup file.');return;}if(!confirm('Import '+(data.txns&&data.txns.length||0)+' transactions and '+(data.portfolio&&data.portfolio.length||0)+' holdings?'))return;const existIds=new Set(txns.map(function(t){return t.id;}));txns=[].concat((data.txns||[]).filter(function(t){return!existIds.has(t.id);}),txns);const existPIds=new Set(portfolio.map(function(h){return h.id;}));portfolio=[].concat(portfolio,(data.portfolio||[]).filter(function(h){return!existPIds.has(h.id);}));save();renderAll();alert('Import successful!');}catch(err){alert('Failed to read backup file.');}};reader.readAsText(file);event.target.value='';};
@@ -657,6 +1035,7 @@ async function loadAISettingsFromFS(uid){
 }
 /* ── TAB AI TIPS (NEW) ── */
 const tabAICache={};
+let lastTabAIFingerprint='';
 const tabAIQ={
   dashboard:'In 2 sentences what is the single most important financial action I should take right now? Be specific with rupee amounts.',
   expenses:'In 2 sentences analyse my spending and tell me one specific category to cut and exactly how much I can save.',
@@ -730,6 +1109,8 @@ window.fetchTabAI=async function fetchTabAI(tab,force){
     if(btn)btn.style.display='none';
     return;
   }
+  var fp=dataFingerprint();
+  if(fp!==lastTabAIFingerprint){Object.keys(tabAICache).forEach(function(k){delete tabAICache[k];});lastTabAIFingerprint=fp;}
   if(tabAICache[tab]){
     el.className='ai-tip-text';
     el.textContent=tabAICache[tab];
@@ -795,41 +1176,41 @@ window.fetchTabAI=async function fetchTabAI(tab,force){
 /* ── HEATMAP CALENDAR ── */
 function renderHeatmap(){
   const grid=document.getElementById('heatmap-grid');
-  const monthsEl=document.getElementById('heatmap-months');
+  const labelEl=document.getElementById('heatmap-label');
+  const totalEl=document.getElementById('heatmap-total');
+  const nextBtn=document.getElementById('heatmap-next-btn');
   if(!grid)return;
   const now=new Date();
-  const year=now.getFullYear();
-  const month=now.getMonth();
-  // Build daily spend map for current month
+  const year=heatmapYear;
+  const month=heatmapMonth;
+  const isCurMonth=(year===now.getFullYear()&&month===now.getMonth());
+  if(nextBtn)nextBtn.disabled=isCurMonth;
+  // Build daily spend map for selected month
   const dailySpend={};
   txns.filter(function(t){
-    const d=new Date(t.date.split('/').reverse().join('-'));
-    return t.type==='expense'&&d.getFullYear()===year&&d.getMonth()===month;
+    return t.type==='expense'&&isInMonth(t,year,month);
   }).forEach(function(t){
-    const d=new Date(t.date.split('/').reverse().join('-'));
-    const key=d.getDate();
-    dailySpend[key]=(dailySpend[key]||0)+t.amt;
+    var p=t.date.split('/');var dayNum=parseInt(p[0])||1;
+    dailySpend[dayNum]=(dailySpend[dayNum]||0)+t.amt;
   });
+  const totalSpend=Object.values(dailySpend).reduce(function(a,v){return a+v;},0);
   const maxSpend=Math.max(1,...Object.values(dailySpend));
   const daysInMonth=new Date(year,month+1,0).getDate();
   const firstDay=new Date(year,month,1).getDay();
-  const today=now.getDate();
+  const today=isCurMonth?now.getDate():-1;
   // Month label
-  const monthLabel=now.toLocaleString('en-IN',{month:'long',year:'numeric'});
-  monthsEl.innerHTML='<span style="font-size:12px;color:var(--text2);font-weight:500">'+monthLabel+'</span>';
+  const monthLabel=new Date(year,month,1).toLocaleString('en-IN',{month:'long',year:'numeric'});
+  if(labelEl)labelEl.textContent=monthLabel;
+  if(totalEl)totalEl.textContent=totalSpend>0?'\u20b9'+Math.round(totalSpend).toLocaleString('en-IN'):'';
   // Day labels
   const days=['S','M','T','W','T','F','S'];
-  // Build grid: empty cells + day cells
   let cells='';
-  // Day header row
   for(let d=0;d<7;d++){
     cells+='<div style="font-size:9px;color:var(--text3);text-align:center;padding-bottom:2px">'+days[d]+'</div>';
   }
-  // Empty cells for first week
   for(let i=0;i<firstDay;i++){
     cells+='<div></div>';
   }
-  // Day cells
   for(let day=1;day<=daysInMonth;day++){
     const spend=dailySpend[day]||0;
     const ratio=spend/maxSpend;
@@ -846,6 +1227,16 @@ function renderHeatmap(){
   }
   grid.innerHTML=cells;
 }
+window.changeHeatmapMonth=function(delta){
+  heatmapMonth+=delta;
+  if(heatmapMonth<0){heatmapMonth=11;heatmapYear--;}
+  if(heatmapMonth>11){heatmapMonth=0;heatmapYear++;}
+  var now=new Date();
+  if(heatmapYear>now.getFullYear()||(heatmapYear===now.getFullYear()&&heatmapMonth>now.getMonth())){
+    heatmapYear=now.getFullYear();heatmapMonth=now.getMonth();
+  }
+  renderHeatmap();
+};
 
 /* ── MONTH PROGRESS BAR ── */
 function renderMonthProgress(){
@@ -874,7 +1265,7 @@ window.generatePersonality=async function(force){
   wrap.style.display='block';
   const isEstimated=dc.pctCycle<50;
   // Check cache
-  const cacheKey='personality_'+new Date().getFullYear()+'_'+new Date().getMonth();
+  const cacheKey='personality_'+new Date().getFullYear()+'_'+new Date().getMonth()+'_'+dataFingerprint();
   if(personalityCache[cacheKey]&&!force){
     const c=personalityCache[cacheKey];
     emojiEl.textContent=c.emoji;typeEl.textContent=c.type;storyEl.className='personality-story';storyEl.textContent=c.story;
@@ -1128,7 +1519,7 @@ window.ask=async function(q){
   if(!question){_asking=false;return;}
   inp.value='';
   aMsg(question,'user');
-  const ck=question.toLowerCase().trim().substring(0,60);
+  const ck=question.toLowerCase().trim().substring(0,60)+'|'+dataFingerprint();
   if(aiCache[ck]){aiCacheHits++;aMsg(aiCache[ck],'ai');setCN('From cache \u2014 free!',4000);updateAIUI();_asking=false;return;}
   setCN('');
   const loading=aMsg('Thinking\u2026','ai loading');
