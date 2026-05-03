@@ -414,7 +414,16 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
     <div class="month-progress" id="month-progress-bar">
       <span id="month-progress-label">Loading...</span>
       <div class="month-progress-bar"><div class="month-progress-fill" id="month-progress-fill" style="width:0%"></div></div>
-      <span class="projected-badge" id="month-projected" style="display:none">Projected</span>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+        <span class="projected-badge" id="month-projected" style="display:none">Projected</span>
+        <span style="font-size:10px;color:var(--text3);margin-left:auto;cursor:pointer" onclick="document.getElementById('salary-day-set').style.display=document.getElementById('salary-day-set').style.display==='none'?'flex':'none'">&#9881; Set salary day</span>
+      </div>
+      <div id="salary-day-set" style="display:none;align-items:center;gap:8px;margin-top:6px;padding:8px 0">
+        <label style="font-size:11px;color:var(--text2)">I get salary on day:</label>
+        <input type="number" id="salary-day-input" min="1" max="28" style="width:50px;height:28px;font-size:12px;text-align:center" />
+        <button class="btn sm pri" onclick="setSalaryDay(document.getElementById('salary-day-input').value)" style="height:28px;font-size:11px;padding:0 10px">Save</button>
+        <span style="font-size:10px;color:var(--text3)">of every month</span>
+      </div>
     </div>
     <div id="personality-card-wrap">
       <div class="personality-card">
@@ -841,22 +850,133 @@ function parseTxnMonth(t){
   return{m:new Date().getMonth(),y:new Date().getFullYear()};
 }
 function isInMonth(t,y,m){if(!t||!t.date)return false;var d=parseTxnMonth(t);return d.y===y&&d.m===m;}
-/* Find the most recent month that has transactions, fallback to current */
+/* ── SALARY CYCLE ENGINE ── */
+/* Parse any txn date string → JS Date object */
+function parseTxnDate(t){
+  if(!t||!t.date)return null;
+  var d=t.date;
+  var p=d.split('/');
+  if(p.length>=3){
+    var day=parseInt(p[0]),mon=parseInt(p[1]),yr=parseInt(p[2]);
+    if(yr<100)yr+=2000;
+    if(mon>=1&&mon<=12)return new Date(yr,mon-1,day);
+  }
+  if(d.indexOf('-')!==-1){
+    var ip=d.split('-');
+    if(ip.length>=3&&ip[0].length===4)return new Date(parseInt(ip[0]),parseInt(ip[1])-1,parseInt(ip[2]));
+  }
+  var parsed=new Date(d);
+  if(!isNaN(parsed.getTime()))return parsed;
+  return new Date();
+}
+/* Auto-detect salary day from income transactions */
+function detectSalaryDay(){
+  var saved=localStorage.getItem('finai_salary_day');
+  if(saved)return parseInt(saved)||1;
+  var incomeTxns=txns.filter(function(t){return t.type==='income';});
+  if(incomeTxns.length===0)return 1;
+  /* Find most common income day */
+  var dayCounts={};
+  incomeTxns.forEach(function(t){
+    var dt=parseTxnDate(t);
+    if(dt){var d=dt.getDate();dayCounts[d]=(dayCounts[d]||0)+1;}
+  });
+  var bestDay=1,bestCount=0;
+  Object.keys(dayCounts).forEach(function(d){
+    if(dayCounts[d]>bestCount){bestCount=dayCounts[d];bestDay=parseInt(d);}
+  });
+  return bestDay;
+}
+window.setSalaryDay=function(val){
+  var v=parseInt(val)||1;
+  if(v<1)v=1;if(v>28)v=28;
+  localStorage.setItem('finai_salary_day',v);
+  renderAll();
+};
+/* Get current salary cycle date range {start:Date, end:Date, salaryDay, isCurrent, label} */
+function getSalaryCycle(){
+  var salaryDay=detectSalaryDay();
+  var now=new Date();
+  var today=now.getDate();
+  var start,end;
+  if(today>=salaryDay){
+    /* Salary already credited this month */
+    start=new Date(now.getFullYear(),now.getMonth(),salaryDay);
+    end=new Date(now.getFullYear(),now.getMonth()+1,salaryDay-1);
+  }else{
+    /* Salary not yet credited — still in last cycle */
+    start=new Date(now.getFullYear(),now.getMonth()-1,salaryDay);
+    end=new Date(now.getFullYear(),now.getMonth(),salaryDay-1);
+  }
+  /* Normalize end to end of that day */
+  end.setHours(23,59,59,999);
+  var label=start.toLocaleString('en-IN',{day:'numeric',month:'short'})+' \u2013 '+end.toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  var daysInCycle=Math.round((end-start)/(1000*60*60*24))+1;
+  var daysElapsed=Math.round((now-start)/(1000*60*60*24))+1;
+  return{start:start,end:end,salaryDay:salaryDay,isCurrent:true,label:label,daysInCycle:daysInCycle,daysElapsed:daysElapsed};
+}
+/* Check if a transaction falls within a salary cycle */
+function isInCycle(t,cycle){
+  if(!t||!t.date)return false;
+  var dt=parseTxnDate(t);
+  if(!dt)return false;
+  return dt>=cycle.start&&dt<=cycle.end;
+}
+/* Get all txns in current salary cycle, with fallback to latest cycle with data */
+function getCurMonthTxns(){
+  var cycle=getSalaryCycle();
+  var result=txns.filter(function(t){return isInCycle(t,cycle);});
+  if(result.length>0)return result;
+  /* Fallback: find the latest txn date and build a cycle around it */
+  if(txns.length===0)return[];
+  var latestDate=null;
+  txns.forEach(function(t){
+    var dt=parseTxnDate(t);
+    if(dt&&(!latestDate||dt>latestDate))latestDate=dt;
+  });
+  if(!latestDate)return[];
+  var sd=cycle.salaryDay;
+  var fStart,fEnd;
+  if(latestDate.getDate()>=sd){
+    fStart=new Date(latestDate.getFullYear(),latestDate.getMonth(),sd);
+    fEnd=new Date(latestDate.getFullYear(),latestDate.getMonth()+1,sd-1);
+  }else{
+    fStart=new Date(latestDate.getFullYear(),latestDate.getMonth()-1,sd);
+    fEnd=new Date(latestDate.getFullYear(),latestDate.getMonth(),sd-1);
+  }
+  fEnd.setHours(23,59,59,999);
+  var fallback={start:fStart,end:fEnd,salaryDay:sd,isCurrent:false};
+  return txns.filter(function(t){return isInCycle(t,fallback);});
+}
+/* getActiveMonth now returns cycle info */
 function getActiveMonth(){
-  var n=new Date();
-  var cy=n.getFullYear(),cm=n.getMonth();
-  if(txns.some(function(t){return isInMonth(t,cy,cm);}))return{y:cy,m:cm,isCurrent:true};
+  var cycle=getSalaryCycle();
+  var hasCycleData=txns.some(function(t){return isInCycle(t,cycle);});
+  if(hasCycleData)return{y:cycle.start.getFullYear(),m:cycle.start.getMonth(),isCurrent:true,cycle:cycle};
+  /* Fallback to latest data */
+  var n=new Date();var cy=n.getFullYear(),cm=n.getMonth();
   var latest=null;
   txns.forEach(function(t){
     var p=parseTxnMonth(t);
     if(!latest||p.y>latest.y||(p.y===latest.y&&p.m>latest.m)){latest={y:p.y,m:p.m};}
   });
-  if(latest)return{y:latest.y,m:latest.m,isCurrent:false};
-  return{y:cy,m:cm,isCurrent:true};
+  if(latest)return{y:latest.y,m:latest.m,isCurrent:false,cycle:cycle};
+  return{y:cy,m:cm,isCurrent:true,cycle:cycle};
 }
-function getCurMonthTxns(){var a=getActiveMonth();return txns.filter(function(t){return isInMonth(t,a.y,a.m);});}
-function getInc(y,m){if(y===undefined){var a=getActiveMonth();y=a.y;m=a.m;}return txns.filter(function(t){return t.type==='income'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);}
-function getExp(y,m){if(y===undefined){var a=getActiveMonth();y=a.y;m=a.m;}return txns.filter(function(t){return t.type==='expense'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);}
+function getInc(y,m){
+  var curMT=getCurMonthTxns();
+  if(y!==undefined){/* explicit month requested — use calendar month filter */
+    return txns.filter(function(t){return t.type==='income'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);
+  }
+  return curMT.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);
+}
+function getExp(y,m){
+  var curMT=getCurMonthTxns();
+  if(y!==undefined){
+    return txns.filter(function(t){return t.type==='expense'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);
+  }
+  return curMT.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+(parseFloat(t.amt)||0);},0);
+}
 function dataFingerprint(){return txns.length+'_'+getInc()+'_'+getExp()+'_'+portfolio.length+'_'+new Date().getMonth();}
 function getPortVal(){return portfolio.reduce(function(a,h){return a+h.qty*h.cur;},0);}
 function getPortPL(){return portfolio.reduce(function(a,h){return a+(h.cur-h.buy)*h.qty;},0);}
@@ -916,16 +1036,16 @@ function renderAllowance(){
   var inc=getInc(),exp=getExp();
   if(inc===0){card.style.display='none';return;}
   card.style.display='block';
-  var now=new Date();
-  var daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  var daysLeft=daysInMonth-now.getDate()+1;
+  var cycle=getSalaryCycle();
+  var daysLeft=Math.max(1,cycle.daysInCycle-cycle.daysElapsed+1);
   var remaining=inc-exp;
   var savingsTarget=Math.round(inc*0.2);
   var spendable=Math.max(0,remaining-savingsTarget);
   var daily=Math.round(spendable/Math.max(1,daysLeft));
   document.getElementById('allowance-amt').textContent='\u20b9'+daily.toLocaleString('en-IN');
   document.getElementById('allowance-emoji').textContent=daily>500?'\ud83d\udcb0':daily>200?'\ud83d\udfe2':daily>0?'\ud83d\udfe1':'\ud83d\udd34';
-  document.getElementById('allowance-sub').textContent=daysLeft+' days left \u00b7 \u20b9'+spendable.toLocaleString('en-IN')+' remaining (after 20% savings)';
+  var cycleLabel=cycle.salaryDay===1?'this month':'pay cycle';
+  document.getElementById('allowance-sub').textContent=daysLeft+' days left in '+cycleLabel+' \u00b7 \u20b9'+spendable.toLocaleString('en-IN')+' remaining (after 20% savings)';
 }
 /* ── BUDGET TRACKER ── */
 window.toggleBudgetEdit=function(){
@@ -1135,8 +1255,8 @@ window.emailReport=function(){
   body+='\u2014\nGenerated by FinAI Personal Finance OS\nhttps://soumya074.github.io/FinAi';
   window.location.href='mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 };
-function renderDash(){const am=getActiveMonth();const inc=getInc(),exp=getExp(),sav=inc-exp;document.getElementById('m-inc').textContent='\u20b9'+inc.toLocaleString('en-IN');document.getElementById('m-exp').textContent='\u20b9'+exp.toLocaleString('en-IN');document.getElementById('m-sav').textContent=(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN');var subLabel=am.isCurrent?'this month':new Date(am.y,am.m).toLocaleString('en-IN',{month:'long',year:'numeric'});var subLabels=document.querySelectorAll('#tab-dashboard .met .sub');if(subLabels[0])subLabels[0].textContent=subLabel;if(subLabels[1])subLabels[1].textContent=subLabel;document.getElementById('m-sav-s').textContent=sav>=0?'saved '+subLabel:'over budget';document.getElementById('m-sav-c').className='met '+(sav>=0?'gv':'rv');document.getElementById('m-port').textContent='\u20b9'+Math.round(getPortVal()).toLocaleString('en-IN');document.getElementById('m-port-s').textContent=portfolio.length+' holding'+(portfolio.length!==1?'s':'');const pl=getPortPL();document.getElementById('m-pl').textContent=(pl<0?'-':'')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN');document.getElementById('m-pl-c').className='met '+(pl>=0?'gv':'rv');const sc=calcScore();document.getElementById('m-sc').textContent=sc||'\u2014';document.getElementById('m-sc-s').textContent=sc>=70?'great shape':sc>=50?'doing ok':sc?'needs work':'add data';document.getElementById('m-inv').textContent='\u20b9'+Math.max(0,Math.round(sav*0.2)).toLocaleString('en-IN');const curMT=getCurMonthTxns();const catT={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){catT[t.cat]=(catT[t.cat]||0)+(parseFloat(t.amt)||0);});const cats=Object.keys(catT);if(catChart)catChart.destroy();if(cats.length>0){const c=cc();catChart=new Chart(document.getElementById('catChart'),{type:'doughnut',data:{labels:cats.map(function(x){return CL[x]||x;}),datasets:[{data:cats.map(function(x){return catT[x];}),backgroundColor:cats.map(function(x){return CC[x]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}})}const rl=document.getElementById('recent-list');const rec=curMT.slice(0,5);rl.innerHTML=rec.length?rec.map(function(t){return tHTML(t,false);}).join(''):'<div class="empty">No transactions '+(am.isCurrent?'this month':'for '+subLabel)+'. Add some in the Expenses tab.</div>';renderHeatmap();renderMonthProgress();generatePersonality(false);renderAllowance();renderBudgets();}
-function renderExpenses(){const al=document.getElementById('all-list');const am=getActiveMonth();const mLabel=new Date(am.y,am.m).toLocaleString('en-IN',{month:'long',year:'numeric'});const curMT=getCurMonthTxns();const olderT=txns.filter(function(t){return !isInMonth(t,am.y,am.m);});let html='';if(curMT.length>0){html+='<div style="font-size:12px;color:var(--text2);font-weight:600;padding:8px 4px;text-transform:uppercase;letter-spacing:0.06em">'+mLabel+' ('+curMT.length+' transactions)</div>';html+=curMT.map(function(t){return tHTML(t,true);}).join('');}if(olderT.length>0){html+='<div style="font-size:12px;color:var(--text3);font-weight:600;padding:12px 4px 8px;text-transform:uppercase;letter-spacing:0.06em;border-top:1px solid var(--border);margin-top:8px">Older transactions ('+olderT.length+')</div>';html+=olderT.map(function(t){return tHTML(t,true);}).join('');}if(!html)html='<div class="empty">No transactions yet.</div>';al.innerHTML=html;}
+function renderDash(){const am=getActiveMonth();const cycle=getSalaryCycle();const inc=getInc(),exp=getExp(),sav=inc-exp;document.getElementById('m-inc').textContent='\u20b9'+inc.toLocaleString('en-IN');document.getElementById('m-exp').textContent='\u20b9'+exp.toLocaleString('en-IN');document.getElementById('m-sav').textContent=(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN');var subLabel=cycle.salaryDay===1?(am.isCurrent?'this month':new Date(am.y,am.m).toLocaleString('en-IN',{month:'long',year:'numeric'})):cycle.label;var subLabels=document.querySelectorAll('#tab-dashboard .met .sub');if(subLabels[0])subLabels[0].textContent=subLabel;if(subLabels[1])subLabels[1].textContent=subLabel;document.getElementById('m-sav-s').textContent=sav>=0?'saved '+subLabel:'over budget';document.getElementById('m-sav-c').className='met '+(sav>=0?'gv':'rv');document.getElementById('m-port').textContent='\u20b9'+Math.round(getPortVal()).toLocaleString('en-IN');document.getElementById('m-port-s').textContent=portfolio.length+' holding'+(portfolio.length!==1?'s':'');const pl=getPortPL();document.getElementById('m-pl').textContent=(pl<0?'-':'')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN');document.getElementById('m-pl-c').className='met '+(pl>=0?'gv':'rv');const sc=calcScore();document.getElementById('m-sc').textContent=sc||'\u2014';document.getElementById('m-sc-s').textContent=sc>=70?'great shape':sc>=50?'doing ok':sc?'needs work':'add data';document.getElementById('m-inv').textContent='\u20b9'+Math.max(0,Math.round(sav*0.2)).toLocaleString('en-IN');const curMT=getCurMonthTxns();const catT={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){catT[t.cat]=(catT[t.cat]||0)+(parseFloat(t.amt)||0);});const cats=Object.keys(catT);if(catChart)catChart.destroy();if(cats.length>0){const c=cc();catChart=new Chart(document.getElementById('catChart'),{type:'doughnut',data:{labels:cats.map(function(x){return CL[x]||x;}),datasets:[{data:cats.map(function(x){return catT[x];}),backgroundColor:cats.map(function(x){return CC[x]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}})}const rl=document.getElementById('recent-list');const rec=curMT.slice(0,5);rl.innerHTML=rec.length?rec.map(function(t){return tHTML(t,false);}).join(''):'<div class="empty">No transactions for '+subLabel+'. Add some in the Expenses tab.</div>';renderHeatmap();renderMonthProgress();generatePersonality(false);renderAllowance();renderBudgets();}
+function renderExpenses(){const al=document.getElementById('all-list');const cycle=getSalaryCycle();const cycleLabel=cycle.salaryDay===1?new Date().toLocaleString('en-IN',{month:'long',year:'numeric'}):cycle.label;const curMT=getCurMonthTxns();const curIds=new Set(curMT.map(function(t){return t.id;}));const olderT=txns.filter(function(t){return !curIds.has(t.id);});let html='';if(curMT.length>0){html+='<div style="font-size:12px;color:var(--text2);font-weight:600;padding:8px 4px;text-transform:uppercase;letter-spacing:0.06em">'+cycleLabel+' ('+curMT.length+' transactions)</div>';html+=curMT.map(function(t){return tHTML(t,true);}).join('');}if(olderT.length>0){html+='<div style="font-size:12px;color:var(--text3);font-weight:600;padding:12px 4px 8px;text-transform:uppercase;letter-spacing:0.06em;border-top:1px solid var(--border);margin-top:8px">Older transactions ('+olderT.length+')</div>';html+=olderT.map(function(t){return tHTML(t,true);}).join('');}if(!html)html='<div class="empty">No transactions yet.</div>';al.innerHTML=html;}
 function tHTML(t,rm){return'<div class="ti"><div class="dot" style="background:'+(CC[t.cat]||'#888')+'"></div><div class="ti-main"><div class="ti-desc">'+t.desc+'</div><div class="ti-meta">'+(CL[t.cat]||t.cat)+' \u00b7 '+t.date+'</div></div><div class="ti-right"><span class="mood-tag" style="border-color:'+(MC[t.mood]||'#888')+'">'+(t.mood||'\u2014')+'</span><span class="ti-amt'+(t.type==='income'?' inc':'')+'">'+( t.type==='income'?'+':'-')+'\u20b9'+t.amt.toLocaleString('en-IN')+'</span>'+(rm?'<span class="rm" onclick="removeT('+t.id+')">&#215;</span>':'')+'</div></div>';}
 function renderPortfolio(){const list=document.getElementById('holdings-list');const empty=document.getElementById('port-empty');const pc=document.getElementById('port-chart-card');if(portfolio.length===0){list.innerHTML='';empty.style.display='block';pc.style.display='none';return;}empty.style.display='none';pc.style.display='block';list.innerHTML=portfolio.map(function(h){const val=h.qty*h.cur,cost=h.qty*h.buy,pl=val-cost,plPct=pl/cost*100,isPos=pl>=0;const hist=h.priceHistory||[];const ch1d=hist.length>=2?((hist[hist.length-1].price-hist[hist.length-2].price)/hist[hist.length-2].price*100):null;return'<div class="holding-card"><div class="holding-header"><div><div class="holding-name">'+h.name+(h.sym?' <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">'+h.sym+'</span>':'')+'</div><div style="margin-top:5px;display:flex;align-items:center;gap:8px"><span class="badge" style="background:'+(TC[h.type]||'#888')+'25;color:'+(TC[h.type]||'#888')+'">'+h.type.toUpperCase()+'</span>'+(ch1d!==null?'<span class="pill '+(ch1d>=0?'up':'down')+'">'+(ch1d>=0?'\u25b2':'\u25bc')+' '+Math.abs(ch1d).toFixed(2)+'% today</span>':'')+'</div></div><button class="btn sm red" onclick="removeH('+h.id+')">Remove</button></div><div class="holding-stats"><div class="h-stat"><div class="hl">Current value</div><div class="hv">'+fmt(val)+'</div></div><div class="h-stat"><div class="hl">Unrealised P&L</div><div class="hv '+(isPos?'pos':'neg')+'">'+(isPos?'+':'-')+'\u20b9'+Math.round(Math.abs(pl)).toLocaleString('en-IN')+'</div></div><div class="h-stat"><div class="hl">Total return</div><div class="hv '+(isPos?'pos':'neg')+'">'+(isPos?'+':'')+plPct.toFixed(2)+'%</div></div><div class="h-stat"><div class="hl">Qty \u00b7 Buy price</div><div class="hv">'+h.qty+' \u00b7 \u20b9'+h.buy.toLocaleString('en-IN',{maximumFractionDigits:2})+'</div></div></div><div class="update-row"><label>Update price:</label><input type="number" id="upd-'+h.id+'" placeholder="\u20b9 today\'s price" style="flex:1;height:36px" min="0" step="any"/><button class="btn sm pri" onclick="updatePrice('+h.id+')">Update</button><button class="ph-btn" onclick="togglePriceChart('+h.id+')">'+hist.length+' entries \u00b7 '+(hist.length>0?'View chart':'No history')+'</button></div><div id="ph-'+h.id+'" class="price-chart-wrap" style="display:none"><div class="cw" style="height:150px"><canvas id="pc-'+h.id+'"></canvas></div></div></div>';}).join('');const c=cc();if(portChart)portChart.destroy();const typeT={};portfolio.forEach(function(h){const k=h.type.toUpperCase();typeT[k]=(typeT[k]||0)+h.qty*h.cur;});portChart=new Chart(document.getElementById('portChart'),{type:'doughnut',data:{labels:Object.keys(typeT),datasets:[{data:Object.values(typeT).map(function(v){return Math.round(v);}),backgroundColor:Object.keys(typeT).map(function(k){return TC[k.toLowerCase()]||'#888';}),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:c.tick,boxWidth:10,padding:10}},tooltip:{callbacks:{label:function(i){return' \u20b9'+i.raw.toLocaleString('en-IN');}}}}}});}
 const RA={low:{eq:30,debt:50,gold:10,intl:5,cash:5,desc:'Capital protection priority. Mostly debt and bonds with limited equity.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff','#64748b'],labels:['Equity 30%','Debt 50%','Gold 10%','Intl 5%','Cash 5%']},moderate:{eq:60,debt:25,gold:10,intl:5,cash:0,desc:'Balanced growth and stability. Good for 5\u201310 year horizon.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff'],labels:['Equity 60%','Debt 25%','Gold 10%','Intl 5%']},high:{eq:75,debt:10,gold:5,intl:10,cash:0,desc:'Majority equity for maximum long-term growth. 10+ year horizon.',color:['#00d48a','#a78bfa','#ffb547','#4d9fff'],labels:['Equity 75%','Debt 10%','Gold 5%','Intl 10%']},ultra:{eq:90,debt:0,gold:5,intl:5,cash:0,desc:'Almost entirely equity. For young investors with 15+ year horizon.',color:['#00d48a','#ffb547','#4d9fff'],labels:['Equity 90%','Gold 5%','Intl 5%']}};
@@ -1385,12 +1505,18 @@ function renderMonthProgress(){
   const fill=document.getElementById('month-progress-fill');
   const badge=document.getElementById('month-projected');
   if(!el)return;
+  const cycle=getSalaryCycle();
   const dc=getDateContext();
-  const cycleLabel=dc.salaryDay===1?'month':'pay cycle';
-  el.innerHTML='<strong>Day '+dc.daysElapsed+'</strong> of '+dc.daysInCycle+' in '+cycleLabel+' &nbsp;&middot;&nbsp; ₹'+dc.projectedExp.toLocaleString('en-IN')+' projected';
-  fill.style.width=dc.pctCycle+'%';
-  if(dc.pctCycle<95&&dc.daysElapsed>2){badge.style.display='inline';}
+  const cycleLabel=cycle.salaryDay===1?'month':'pay cycle ('+cycle.label+')';
+  el.innerHTML='<strong>Day '+cycle.daysElapsed+'</strong> of '+cycle.daysInCycle+' in '+cycleLabel+' &nbsp;&middot;&nbsp; \u20b9'+dc.projectedExp.toLocaleString('en-IN')+' projected';
+  var pct=Math.min(100,Math.round((cycle.daysElapsed/cycle.daysInCycle)*100));
+  fill.style.width=pct+'%';
+  if(pct<95&&cycle.daysElapsed>2){badge.style.display='inline';}
+  var inp=document.getElementById('salary-day-input');
+  if(inp&&!inp.value)inp.value=cycle.salaryDay;
 }
+
+
 
 /* ── FINANCIAL PERSONALITY ── */
 const personalityCache={};
