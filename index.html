@@ -315,6 +315,28 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);box-shadow:0
 .bill-due.ok{background:var(--green-dim);color:var(--green)}
 .bill-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px}
 @media(max-width:600px){.bill-form{grid-template-columns:1fr 1fr}}
+/* Reports Snapshot */
+.rpt-hero{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--border);border-radius:22px;padding:24px;margin-bottom:1rem;position:relative;overflow:hidden}
+.rpt-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:var(--green-glow);opacity:0.15;pointer-events:none}
+.rpt-hero-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.rpt-hero-sub{font-size:12px;color:var(--text3);margin-bottom:16px}
+.rpt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+.rpt-stat{text-align:center;padding:14px 8px;background:var(--bg);border:1px solid var(--border);border-radius:16px;transition:var(--tr)}
+.rpt-stat:hover{border-color:var(--green);transform:translateY(-2px)}
+.rpt-stat-emoji{font-size:22px;margin-bottom:4px}
+.rpt-stat-val{font-size:18px;font-weight:700;font-family:var(--mono);line-height:1.2}
+.rpt-stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+.rpt-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:12px}
+.rpt-cat-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;font-size:12px}
+.rpt-cat-item .rpt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rpt-cat-item .rpt-cat-name{flex:1;color:var(--text2)}
+.rpt-cat-item .rpt-cat-amt{font-weight:600;font-family:var(--mono)}
+.rpt-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:1rem}
+.rpt-action{padding:16px;border:1px solid var(--border);border-radius:16px;cursor:pointer;text-align:center;transition:var(--tr);background:var(--bg3)}
+.rpt-action:hover{border-color:var(--green);transform:translateY(-3px);box-shadow:0 8px 24px -8px var(--green-glow)}
+.rpt-action-icon{font-size:24px;margin-bottom:6px}
+.rpt-action-title{font-size:13px;font-weight:600}
+.rpt-action-desc{font-size:11px;color:var(--text3);margin-top:2px}
 </style>
 </head>
 <body class="dark">
@@ -537,15 +559,43 @@ or: INR 500.00 spent at AMAZON via HDFC Card" oninput="parseSMS()"></textarea>
     <div class="card"><div class="card-title">Smart insights</div><div class="ins-grid" id="ins-grid"><div class="ins neutral"><div class="it">Getting started</div>Add transactions and holdings to unlock personalised insights.</div></div></div>
   </div>
   <div id="tab-reports" class="sec">
+    <div class="rpt-hero">
+      <div class="rpt-hero-title" id="rpt-title">Monthly Snapshot</div>
+      <div class="rpt-hero-sub" id="rpt-sub">Loading...</div>
+      <div class="rpt-stats" id="rpt-stats"></div>
+    </div>
     <div class="card">
-      <div class="card-title">Export &amp; reports</div>
-      <div class="report-btns">
-        <button class="btn pri" onclick="genPDF()">Download PDF report</button>
-        <button class="btn" style="background:linear-gradient(135deg,var(--orange-dim),var(--amber-dim));color:var(--orange);border-color:var(--orange-glow);font-weight:600" onclick="emailReport()">&#128231; Email Monthly Report</button>
-        <button class="btn blue" onclick="exportJSON()">Export JSON backup</button>
-        <button class="btn" onclick="document.getElementById('import-file').click()">Import JSON backup</button>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)"/>
+      <div class="card-title">Top spending categories</div>
+      <div class="rpt-cats" id="rpt-cats"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Mood breakdown</div>
+      <div class="rpt-cats" id="rpt-moods"></div>
+    </div>
+    <div class="rpt-actions">
+      <div class="rpt-action" onclick="genPDF()">
+        <div class="rpt-action-icon">📄</div>
+        <div class="rpt-action-title">Download PDF</div>
+        <div class="rpt-action-desc">Full monthly report</div>
       </div>
+      <div class="rpt-action" onclick="emailReport()">
+        <div class="rpt-action-icon">📧</div>
+        <div class="rpt-action-title">Email Report</div>
+        <div class="rpt-action-desc">Send to your inbox</div>
+      </div>
+      <div class="rpt-action" onclick="exportJSON()">
+        <div class="rpt-action-icon">💾</div>
+        <div class="rpt-action-title">Export Backup</div>
+        <div class="rpt-action-desc">JSON data file</div>
+      </div>
+      <div class="rpt-action" onclick="document.getElementById('import-file').click()">
+        <div class="rpt-action-icon">📥</div>
+        <div class="rpt-action-title">Import Data</div>
+        <div class="rpt-action-desc">Restore from backup</div>
+      </div>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)"/>
+    </div>
+    <div class="card" style="margin-top:1rem">
       <div class="sync-info" id="sync-status-detail">Loading...</div>
     </div>
     <div class="card">
@@ -748,11 +798,31 @@ async function saveFS(){if(!isOnline||!currentUser)return;setSyncDot('syncing');
 function save(){saveLocal();saveFS();uploadContextToWorker(currentUser?currentUser.uid:'offline');}
 function setSyncDot(s){const d=document.getElementById('sync-dot');if(d){d.className='sync-dot'+(s==='synced'?' synced':s==='syncing'?' syncing':'');if(s==='error')d.style.background='var(--red)';}const sd=document.getElementById('sync-status-detail');if(sd){if(!isOnline){sd.innerHTML='<span style="color:var(--amber)">Offline mode.</span>';return;}if(!IS_CFG){sd.innerHTML='<span style="color:var(--red)">Firebase not configured.</span>';return;}if(s==='synced')sd.innerHTML='<span style="color:var(--green)">Synced</span> as <strong>'+(currentUser&&(currentUser.displayName||currentUser.email))+'</strong>';else if(s==='syncing')sd.innerHTML='<span style="color:var(--amber)">Saving\u2026</span>';else sd.innerHTML='<span style="color:var(--red)">Sync failed.</span>';}}
 window.sm=function(el){document.querySelectorAll('.mb').forEach(function(b){b.classList.remove('ms');});el.classList.add('ms');selMood=el.dataset.m;};
-window.sw=function(tab,el){document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.getElementById('tab-'+tab).classList.add('active');if(el)el.classList.add('active');if(tab==='invest')renderInvest();if(tab==='portfolio')renderPortfolio();if(tab==='sip')calcSIP();if(tab==='health')renderHealth();if(tab==='reports')setSyncDot(isOnline?'synced':'offline');if(tab==='aikey')loadAISettings();if(tab==='dashboard'||tab==='expenses'||tab==='invest'||tab==='sip')fetchTabAI(tab);if(tab==='expenses'){var di=document.getElementById('e-date');if(di&&!di.value)di.value=new Date().toISOString().split('T')[0];renderTrend();}};
+window.sw=function(tab,el){document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.getElementById('tab-'+tab).classList.add('active');if(el)el.classList.add('active');if(tab==='invest')renderInvest();if(tab==='portfolio')renderPortfolio();if(tab==='sip')calcSIP();if(tab==='health')renderHealth();if(tab==='reports'){setSyncDot(isOnline?'synced':'offline');renderReportSnapshot();}if(tab==='aikey')loadAISettings();if(tab==='dashboard'||tab==='expenses'||tab==='invest'||tab==='sip')fetchTabAI(tab);if(tab==='expenses'){var di=document.getElementById('e-date');if(di&&!di.value)di.value=new Date().toISOString().split('T')[0];renderTrend();}};
 function cc(){const d=curTheme()==='dark';return{tick:d?'rgba(143,163,191,0.8)':'rgba(74,96,128,0.9)',grid:d?'rgba(255,255,255,0.04)':'rgba(20,40,100,0.05)'}}
 const fmt=function(n){if(n>=10000000)return'\u20b9'+(n/10000000).toFixed(2)+'Cr';if(n>=100000)return'\u20b9'+(n/100000).toFixed(1)+'L';return'\u20b9'+Math.round(n).toLocaleString('en-IN');};
-function parseTxnMonth(t){var p=t.date.split('/');return{m:parseInt(p[1])-1,y:parseInt(p[2])||new Date().getFullYear()};}
-function isInMonth(t,y,m){var d=parseTxnMonth(t);return d.y===y&&d.m===m;}
+function parseTxnMonth(t){
+  if(!t||!t.date)return{m:new Date().getMonth(),y:new Date().getFullYear()};
+  var d=t.date;
+  /* Handle dd/mm/yyyy or d/m/yyyy or d/m/yy */
+  var p=d.split('/');
+  if(p.length>=3){
+    var day=parseInt(p[0]),mon=parseInt(p[1]),yr=parseInt(p[2]);
+    if(yr<100)yr+=2000;
+    if(mon>=1&&mon<=12)return{m:mon-1,y:yr};
+  }
+  /* Handle yyyy-mm-dd ISO format */
+  if(d.indexOf('-')!==-1){
+    var ip=d.split('-');
+    if(ip.length>=3&&ip[0].length===4)return{m:parseInt(ip[1])-1,y:parseInt(ip[0])};
+  }
+  /* Fallback: try Date constructor */
+  var parsed=new Date(d);
+  if(!isNaN(parsed.getTime()))return{m:parsed.getMonth(),y:parsed.getFullYear()};
+  /* Last resort: current month */
+  return{m:new Date().getMonth(),y:new Date().getFullYear()};
+}
+function isInMonth(t,y,m){if(!t||!t.date)return false;var d=parseTxnMonth(t);return d.y===y&&d.m===m;}
 function getCurMonthTxns(){var n=new Date();return txns.filter(function(t){return isInMonth(t,n.getFullYear(),n.getMonth());});}
 function getInc(y,m){if(y===undefined){var n=new Date();y=n.getFullYear();m=n.getMonth();}return txns.filter(function(t){return t.type==='income'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+t.amt;},0);}
 function getExp(y,m){if(y===undefined){var n=new Date();y=n.getFullYear();m=n.getMonth();}return txns.filter(function(t){return t.type==='expense'&&isInMonth(t,y,m);}).reduce(function(a,t){return a+t.amt;},0);}
@@ -966,6 +1036,46 @@ function renderTrend(){
   if(incD.every(function(v){return v===0;})&&expD.every(function(v){return v===0;}))return;
   var c=cc();
   trendChart=new Chart(canvas,{type:'line',data:{labels:labels,datasets:[{label:'Income',data:incD,borderColor:'#00d48a',backgroundColor:'rgba(0,212,138,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#00d48a',fill:true,tension:0.4},{label:'Expenses',data:expD,borderColor:'#ff5e7d',backgroundColor:'rgba(255,94,125,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#ff5e7d',fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:c.tick,boxWidth:10,padding:14}}},scales:{x:{ticks:{color:c.tick,font:{size:10}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:10},callback:function(v){return fmt(v);}},grid:{color:c.grid}}}}});
+}
+/* ── REPORT SNAPSHOT ── */
+function renderReportSnapshot(){
+  var now=new Date();
+  var mLabel=now.toLocaleString('en-IN',{month:'long',year:'numeric'});
+  document.getElementById('rpt-title').textContent='\ud83d\udcca '+mLabel;
+  var inc=getInc(),exp=getExp(),sav=inc-exp;
+  var curMT=getCurMonthTxns();
+  var savRate=inc>0?Math.round((sav/inc)*100):0;
+  var sc=calcScore();
+  document.getElementById('rpt-sub').textContent=curMT.length+' transactions this month \u00b7 '+txns.length+' total all time';
+  var stats=[
+    {emoji:'\ud83d\udcb0',val:'\u20b9'+inc.toLocaleString('en-IN'),lbl:'Income',color:'var(--green)'},
+    {emoji:'\ud83d\udcb8',val:'\u20b9'+exp.toLocaleString('en-IN'),lbl:'Expenses',color:'var(--red)'},
+    {emoji:sav>=0?'\ud83c\udf1f':'\u26a0\ufe0f',val:(sav<0?'-':'')+'\u20b9'+Math.abs(sav).toLocaleString('en-IN'),lbl:'Savings',color:sav>=0?'var(--green)':'var(--red)'},
+    {emoji:'\ud83c\udfaf',val:savRate+'%',lbl:'Savings rate',color:savRate>=20?'var(--green)':savRate>=10?'var(--orange)':'var(--red)'},
+    {emoji:'\u2764\ufe0f',val:sc||'\u2014',lbl:'Health score',color:sc>=70?'var(--green)':sc>=50?'var(--orange)':'var(--red)'},
+    {emoji:'\ud83d\udcc5',val:curMT.length.toString(),lbl:'Transactions',color:'var(--blue)'}
+  ];
+  document.getElementById('rpt-stats').innerHTML=stats.map(function(s){
+    return'<div class="rpt-stat"><div class="rpt-stat-emoji">'+s.emoji+'</div><div class="rpt-stat-val" style="color:'+s.color+'">'+s.val+'</div><div class="rpt-stat-lbl">'+s.lbl+'</div></div>';
+  }).join('');
+  var cs={};curMT.filter(function(t){return t.type==='expense';}).forEach(function(t){cs[t.cat]=(cs[t.cat]||0)+t.amt;});
+  var sorted=Object.entries(cs).sort(function(a,b){return b[1]-a[1];});
+  var catsEl=document.getElementById('rpt-cats');
+  if(sorted.length>0){
+    catsEl.innerHTML=sorted.map(function(e){
+      var pct=exp>0?Math.round(e[1]/exp*100):0;
+      return'<div class="rpt-cat-item"><div class="rpt-dot" style="background:'+(CC[e[0]]||'#888')+'"></div><div class="rpt-cat-name">'+(CL[e[0]]||e[0])+'</div><div class="rpt-cat-amt">\u20b9'+Math.round(e[1]).toLocaleString('en-IN')+' <span style="color:var(--text3);font-weight:400">('+pct+'%)</span></div></div>';
+    }).join('');
+  }else{catsEl.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px">No expenses this month yet.</div>';}
+  var moods={};curMT.forEach(function(t){if(t.mood)moods[t.mood]=(moods[t.mood]||0)+1;});
+  var moodEmoji={planned:'\ud83c\udfaf',impulsive:'\u26a1',necessary:'\ud83d\udee0\ufe0f',regret:'\ud83d\ude14',happy:'\ud83d\ude04'};
+  var moodsEl=document.getElementById('rpt-moods');
+  var moodSorted=Object.entries(moods).sort(function(a,b){return b[1]-a[1];});
+  if(moodSorted.length>0){
+    moodsEl.innerHTML=moodSorted.map(function(e){
+      return'<div class="rpt-cat-item"><div class="rpt-dot" style="background:'+(MC[e[0]]||'#888')+'"></div><div class="rpt-cat-name">'+(moodEmoji[e[0]]||'')+' '+e[0]+'</div><div class="rpt-cat-amt">'+e[1]+' txns</div></div>';
+    }).join('');
+  }else{moodsEl.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px">No mood data yet.</div>';}
 }
 /* ── EMAIL MONTHLY REPORT ── */
 window.emailReport=function(){
